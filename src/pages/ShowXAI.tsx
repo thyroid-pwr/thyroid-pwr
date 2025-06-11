@@ -1,5 +1,90 @@
 import "./ShowXAI.css";
 
+function DisplayForm() {
+  const onSubmit = (event: any) => {
+    event.preventDefault();
+
+    const target = event.target;
+
+    const data = {
+      file: target.thyroidfile.value,
+      resnet50: target.resnet50.checked,
+      densenet161: target.densenet161.checked,
+      vgg16: target.vgg16.checked,
+      occlusion: target.occlusion.checked,
+      gradcam: target.gradcam.checked,
+      gradcamplusplus: target.gradcamplusplus.checked,
+      integratedgradients: target.integratedgradients.checked,
+      gradientshap: target.gradientshap.checked,
+      showevaluation: target.showdebug.value
+    };
+
+    console.log(data);
+  };
+
+
+  return (
+    <div>
+      <div className="text-6xl font-bold">
+        <span className="center">
+          <p>Explanaible Methods</p>
+        </span>
+      </div>
+      <form id="confirmOptions" className="confirmOptions" onSubmit={onSubmit}>
+        <div className="centerPadding">
+          <label htmlFor="thyroidfile" className="text-xl font-bold rightPadding">Choose file to upload</label>
+          <input type="file" id="thyroidfile" name="thyroidfile" accept="image/png, image/jpeg"/>
+        </div>
+        <div className="selectParameters">
+          <span>
+            <p className="center text-xl font-bold">Select Deep Learning Models</p>
+            <div className="text-xl">
+              <input type="checkbox" id="resnet50" name="resnet50" value="resnet50"/>
+              <label htmlFor="resnet50">ResNet50</label><br/>
+              <input type="checkbox" id="densenet161" name="densenet161" value="densenet161"/>
+              <label htmlFor="densenet161">DenseNet161</label><br/>
+              <input type="checkbox" id="vgg16" name="vgg16" value="vgg16"/>
+              <label htmlFor="vgg16">VGG16</label>
+            </div>
+          </span>
+          <span/>
+          <span>
+            <p className="center text-xl font-bold">Select Explainability Methods</p>
+            <div className="text-xl">
+              <input type="checkbox" id="occlusion" name="occlusion" value="occlusion"/>
+              <label htmlFor="occlusion">Occlusion</label><br/>
+              <input type="checkbox" id="gradcam" name="gradcam" value="gradcam"/>
+              <label htmlFor="gradcam">Grad-CAM</label><br/>
+              <input type="checkbox" id="gradcamplusplus" name="gradcamplusplus" value="gradcamplusplus"/>
+              <label htmlFor="gradcamplusplus">Grad-CAM++</label><br/>
+              <input type="checkbox" id="integratedgradients" name="integratedgradients" value="integratedgradients"/>
+              <label htmlFor="integratedgradients">Integrated Gradients</label><br/>
+              <input type="checkbox" id="gradientshap" name="gradientshap" value="gradientshap"/>
+              <label htmlFor="gradientshap">Gradient SHAP</label>
+            </div>
+          </span>
+          <span/>
+          <span>
+            <p className="center text-xl font-bold">Show Evaluation Criteria</p>
+            <p className="center text-xl font-bold">(Debug Only)</p>
+            <div className="text-xl">
+              <input type="radio" id="showdebugyes" name="showdebug" value="yes"/>
+              <label htmlFor="showdebugyes">Yes</label><br/>
+              <input type="radio" id="showdebugno" name="showdebug" value="no" defaultChecked/>
+              <label htmlFor="showdebugno">No</label><br/>
+            </div>
+          </span>
+        </div>
+        <div className="confirm">
+          <button type="submit"><label className="center text-xl font-bold">Analyze Image</label></button>
+        </div>
+      </form>
+    </div>
+  )
+}
+
+
+
 function ShowOptionsHardcoded() {
   return (
     <div>
@@ -315,7 +400,11 @@ function ShowOptionsHardcoded() {
   )
 }
 
-
+// Zrób listę wybieralną zamiast wybierania dowolnego pliku
 export function ShowXAI() {
-  return ShowOptionsHardcoded()
+  return (
+    <div>
+      {ShowOptionsHardcoded()}
+    </div>
+  )
 } 
