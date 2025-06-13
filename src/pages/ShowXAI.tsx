@@ -1,25 +1,27 @@
 import "./ShowXAI.css";
 
+//const [age, setAge] = useState(null);
+
+// hook use state
 function DisplayForm() {
   const onSubmit = (event: any) => {
     event.preventDefault();
 
-    const target = event.target;
-
-    const data = {
-      file: target.thyroidfile.value,
-      resnet50: target.resnet50.checked,
-      densenet161: target.densenet161.checked,
-      vgg16: target.vgg16.checked,
-      occlusion: target.occlusion.checked,
-      gradcam: target.gradcam.checked,
-      gradcamplusplus: target.gradcamplusplus.checked,
-      integratedgradients: target.integratedgradients.checked,
-      gradientshap: target.gradientshap.checked,
-      showevaluation: target.showdebug.value
+    const variables = {
+      file: event.target.thyroidfile.value,
+      resnet50: event.target.resnet50.checked,
+      densenet161: event.target.densenet161.checked,
+      vgg16: event.target.vgg16.checked,
+      occlusion: event.target.occlusion.checked,
+      gradcam: event.target.gradcam.checked,
+      gradcamplusplus: event.target.gradcamplusplus.checked,
+      integratedgradients: event.target.integratedgradients.checked,
+      gradientshap: event.target.gradientshap.checked,
+      showevaluation: event.target.showdebug.value
     };
 
-    console.log(data);
+    
+
   };
 
 
@@ -32,8 +34,13 @@ function DisplayForm() {
       </div>
       <form id="confirmOptions" className="confirmOptions" onSubmit={onSubmit}>
         <div className="centerPadding">
-          <label htmlFor="thyroidfile" className="text-xl font-bold rightPadding">Choose file to upload</label>
-          <input type="file" id="thyroidfile" name="thyroidfile" accept="image/png, image/jpeg"/>
+          <p className="downPadding text-xl font-bold">Choose file to upload</p>
+          <select name="thyroidfile" id="thyroidfile">
+            <option value="0">Image 0</option>
+            <option value="1">Image 1</option>
+            <option value="2">Image 2</option>
+            <option value="3">Image 3</option>
+          </select>
         </div>
         <div className="selectParameters">
           <span>
@@ -95,8 +102,13 @@ function ShowOptionsHardcoded() {
       </div>
       <form id="confirmOptions" className="confirmOptions">
         <div className="centerPadding">
-          <label htmlFor="thyroidfile" className="text-xl font-bold rightPadding">Choose file to upload</label>
-          <input type="file" id="thyroidfile" name="thyroidfile" accept="image/png, image/jpeg"/>
+          <p className="downPadding text-xl font-bold">Choose file to upload</p>
+          <select name="thyroidfile" id="thyroidfile">
+            <option value="0">Image 0</option>
+            <option value="1">Image 1</option>
+            <option value="2">Image 2</option>
+            <option value="3">Image 3</option>
+          </select>
         </div>
         <div className="selectParameters">
           <span>
