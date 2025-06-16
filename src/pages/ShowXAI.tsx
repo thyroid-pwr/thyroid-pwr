@@ -114,8 +114,8 @@ async function updateData(_previousState: any, formData: any) {
       xaiEval.push({
         modelFullName: getModelFullName(chosenModels[i]),
         xaiFullName: getXAIFullName(chosenXAIs[j]),
-        cor_rel_pixels: await readText("showxai/" + thyroidFile + "/" + chosenModels[i] + "/" + chosenXAIs[j] + "/correctness_confidence_drop_relevant_pixels.txt"),
-        cor_ir_pixels: await readText("showxai/" + thyroidFile + "/" + chosenModels[i] + "/"  + chosenXAIs[j] + "/correctness_confidence_drop_irrelevant_pixels.txt"),
+        cor_rel_pixels: await readText("showxai/" + thyroidFile + "/" + chosenModels[i] + "/" + chosenXAIs[j] + "/correctness_confidence_change_relevant_pixels.txt"),
+        cor_ir_pixels: await readText("showxai/" + thyroidFile + "/" + chosenModels[i] + "/"  + chosenXAIs[j] + "/correctness_confidence_change_irrelevant_pixels.txt"),
         con_class: getPredictionName(await readText("showxai/" + thyroidFile + "/" + chosenModels[i] + "/"  + chosenXAIs[j] + "/contrastivity_predicted_class.txt")),
         con_conf: await readText("showxai/" + thyroidFile + "/" + chosenModels[i] + "/"  + chosenXAIs[j] + "/contrastivity_confidence.txt"),
         coh: await readText("showxai/" + thyroidFile + "/" + chosenModels[i] + "/"  + chosenXAIs[j] + "/coherence.txt"),
