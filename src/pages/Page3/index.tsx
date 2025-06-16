@@ -1,5 +1,6 @@
 import dinoArchitecture from "@/assets/dino-architecture.png";
 import { DatasetsSection } from "./DatasetsSection";
+import { PreprocessingSection } from "./PreprocessingSection";
 
 export function Page3() {
   return (
@@ -10,9 +11,7 @@ export function Page3() {
 
       <DatasetsSection />
 
-      <h2 className="scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight first:mt-0">
-        Preprocessing
-      </h2>
+      <PreprocessingSection />
 
       <h2 className="scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight first:mt-0">
         DINO (self-distillation with no labels)
