@@ -6,16 +6,46 @@ import { useState, useActionState } from "react";
 // TO DO - add correct class in debug
 
 function getModelFullName(modelName: string) {
-  if (modelName == "resnet50") {
-    return "ResNet50";
-  } else if (modelName == "densenet161") {
-    return "DenseNet161";
-  } else if (modelName == "vgg16") {
-    return "VGG16";
-  } else {
-    return "N/A";
+  switch (modelName) {
+    case "resnet50":
+      return "ResNet50"
+    case "densenet161":
+      return "DenseNet161"
+    case "vgg16":
+      return "VGG16"
+    default:
+      return "N/A"
   }
 }
+
+function getXAIFullName(xaiName: string) {
+  switch(xaiName) {
+    case "occlusion":
+      return "Occlusion"
+    case "gradcam":
+      return "Grad-CAM"
+    case "gradcamplusplus":
+      return "Grad-CAM++"
+    case "integratedgradients":
+      return "Integrated Gradients"
+    case "gradientshap":
+      return "Gradient SHAP"
+    default:
+      return "N/A"
+  }
+}
+
+function getPredictionName(prediction: string) {
+  switch (prediction) {
+    case "0":
+      return "Benign"
+    case "1":
+      return "Malignant"
+    default:
+      return "N/A"
+  }
+}
+
 
 async function readText(filepath: string) {
   const res = await fetch(filepath)
@@ -23,37 +53,24 @@ async function readText(filepath: string) {
   return filetext;
 }
 
-async function readClass(filepath: string) {
-  const res = await fetch(filepath)
-  const filetext = await res.text();
-
-  if (filetext == "0") {
-    return "Benign"
-  } else if (filetext == "1") {
-    return "Malignant"
-  } else {
-    return "N/A"
-  }
-}
-
-async function readSingleModelData(thyroidFile: string, modelName: string, xaiData: string[][], showDebug: boolean) {
+async function readSingleModelData(thyroidFile: string, modelName: string, chosenXAIs: string[], showDebug: boolean) {
   // Read model data
   const modelFullName = getModelFullName(modelName);
-  const predictedClass = await readClass("showxai/" + thyroidFile + "/" + modelName + "/predicted_class.txt");
+  const predictedClass = getPredictionName(await readText("showxai/" + thyroidFile + "/" + modelName + "/predicted_class.txt"));
   const confidence = await readText("showxai/" + thyroidFile + "/" + modelName + "/confidence.txt");
 
   // Read debug data
   var correctClass = null;
   if (showDebug) {
-    correctClass = await readClass("showxai/" + thyroidFile + "/" + modelName + "/correct_class.txt");
+    correctClass = getPredictionName(await readText("showxai/" + thyroidFile + "/" + modelName + "/correct_class.txt"));
   }
 
   // Read XAI (saliency maps)
   var saliencyMaps: { xaiFullName: string; filepath: string; }[] = []
-  xaiData.forEach(([xai, xaiFullName]) => {
+  chosenXAIs.forEach((xaiName) => {
     saliencyMaps.push({
-      xaiFullName: xaiFullName,
-      filepath: "showxai/" + thyroidFile + "/" + modelName + "/" + xai + "/saliency_map.jpg"
+      xaiFullName: getXAIFullName(xaiName),
+      filepath: "showxai/" + thyroidFile + "/" + modelName + "/" + xaiName + "/saliency_map.jpg",
     })
   });
   
@@ -70,39 +87,46 @@ async function updateData(_previousState: any, formData: any) {
   const thyroidFile = formData.get("thyroidfile");
   const showDebug = ((formData.get("showdebug") == "yes") ? true : false)
 
-  // Read data about XAI
-  var xaiData = []
-  if (formData.get("occlusion")) {
-    xaiData.push(["occlusion", "Occlusion"])
-  }
-  if (formData.get("gradcam")) {
-    xaiData.push(["gradcam", "Grad-CAM"])
-  }
-  if (formData.get("gradcamplusplus")) {
-    xaiData.push(["gradcamplusplus", "Grad-CAM++"])
-  }
-  if (formData.get("integratedgradients")) {
-    xaiData.push(["integratedgradients", "Integrated Gradients"])
-  }
-  if (formData.get("gradientshap")) {
-    xaiData.push(["gradientshap", "Gradient SHAP"])
+  // Get which models were chosen by the user
+  var chosenModels: string[] = []
+  if (formData.get("resnet50") !== null) chosenModels.push("resnet50");
+  if (formData.get("densenet161") !== null) chosenModels.push("densenet161");
+  if (formData.get("vgg16") !== null) chosenModels.push("vgg16");
+
+  // Get which XAI methods were chosen by the user
+  var chosenXAIs: string[] = []
+  if (formData.get("occlusion") !== null) chosenXAIs.push("occlusion");
+  if (formData.get("gradcam") !== null) chosenXAIs.push("gradcam");
+  if (formData.get("gradcamplusplus") !== null) chosenXAIs.push("gradcamplusplus");
+  if (formData.get("integratedgradients") !== null) chosenXAIs.push("integratedgradients");
+  if (formData.get("gradientshap") !== null) chosenXAIs.push("gradientshap");
+
+  // Read models data (results and saliency maps)
+  var modelsData: { modelFullName: string; predictedClass: string; confidence: string; correctClass: string | null; saliencyMaps: { xaiFullName: string; filepath: string; }[]; }[] = []
+  for (let i = 0; i < chosenModels.length; i++) {
+    modelsData.push(await readSingleModelData(thyroidFile, chosenModels[i], chosenXAIs, showDebug));
   }
 
-  // Read data about models and generated saliency map
-  var modelsData = []
-  if (formData.get("resnet50")) {
-    modelsData.push(await readSingleModelData(thyroidFile, "resnet50", xaiData, showDebug))
-  }
-  if (formData.get("densenet161")) {
-    modelsData.push(await readSingleModelData(thyroidFile, "densenet161", xaiData, showDebug))
-  }
-  if (formData.get("vgg16")) {
-    modelsData.push(await readSingleModelData(thyroidFile, "vgg16", xaiData, showDebug))
+  // Read debug XAI evaluation data
+  var xaiEval: { modelFullName: string; xaiFullName: string; cor_rel_pixels: string; cor_ir_pixels: string; con_class: string; con_conf: string; coh: string; com_time: string; }[] = []
+  for (let i = 0; i < chosenModels.length; i++) {
+    for (let j = 0; j < chosenXAIs.length; j++) {
+      xaiEval.push({
+        modelFullName: getModelFullName(chosenModels[i]),
+        xaiFullName: getXAIFullName(chosenXAIs[j]),
+        cor_rel_pixels: await readText("showxai/" + thyroidFile + "/" + chosenModels[i] + "/" + chosenXAIs[j] + "/correctness_confidence_drop_relevant_pixels.txt"),
+        cor_ir_pixels: await readText("showxai/" + thyroidFile + "/" + chosenModels[i] + "/"  + chosenXAIs[j] + "/correctness_confidence_drop_irrelevant_pixels.txt"),
+        con_class: getPredictionName(await readText("showxai/" + thyroidFile + "/" + chosenModels[i] + "/"  + chosenXAIs[j] + "/contrastivity_predicted_class.txt")),
+        con_conf: await readText("showxai/" + thyroidFile + "/" + chosenModels[i] + "/"  + chosenXAIs[j] + "/contrastivity_confidence.txt"),
+        coh: await readText("showxai/" + thyroidFile + "/" + chosenModels[i] + "/"  + chosenXAIs[j] + "/coherence.txt"),
+        com_time: await readText("showxai/" + thyroidFile + "/" + chosenModels[i] + "/"  + chosenXAIs[j] + "/computational_efficiency.txt"),
+      });
+    }
   }
 
   // Verify config settings to later display potential errors
-  const isOneModelChosen = modelsData.length > 0;
-  const isOneXAIChosen = xaiData.length > 0;
+  const isOneModelChosen = chosenModels.length > 0;
+  const isOneXAIChosen = chosenXAIs.length > 0;
   const isCorrectConfig = isOneModelChosen && isOneXAIChosen;
   const configCheck = {
     "isOneModelChosen": isOneModelChosen,
@@ -115,6 +139,7 @@ async function updateData(_previousState: any, formData: any) {
     "thyroidFile": thyroidFile,
     "modelsData": modelsData,
     "showDebug": showDebug,
+    "xaiEval": xaiEval,
     "formData": formData
   }
 }
@@ -123,28 +148,28 @@ function getFormConfig(data: any) {
   if (data) {
     return {
       "thyroidfile": (data.formData.get("thyroidfile")),
-      "resnet50": ((data.formData.get("resnet50")) ? true : false),
-      "densenet161": ((data.formData.get("densenet161")) ? true : false),
-      "vgg16": ((data.formData.get("vgg16")) ? true : false),
-      "occlusion": ((data.formData.get("occlusion")) ? true : false),
-      "gradcam": ((data.formData.get("gradcam")) ? true : false),
-      "gradcamplusplus": ((data.formData.get("gradcamplusplus")) ? true : false),
-      "integratedgradients": ((data.formData.get("integratedgradients")) ? true : false),
-      "gradientshap": ((data.formData.get("gradientshap")) ? true : false),
+      "resnet50": ((data.formData.get("resnet50") !== null) ? true : false),
+      "densenet161": ((data.formData.get("densenet161") !== null) ? true : false),
+      "vgg16": ((data.formData.get("vgg16") !== null) ? true : false),
+      "occlusion": ((data.formData.get("occlusion") !== null) ? true : false),
+      "gradcam": ((data.formData.get("gradcam") !== null) ? true : false),
+      "gradcamplusplus": ((data.formData.get("gradcamplusplus") !== null) ? true : false),
+      "integratedgradients": ((data.formData.get("integratedgradients") !== null) ? true : false),
+      "gradientshap": ((data.formData.get("gradientshap") !== null) ? true : false),
       "showdebug": ((data.formData.get("showdebug") == "yes") ? true : false),
     }
   } else {
     return {
-      "thyroidfile": "2",
+      "thyroidfile": "1",
       "resnet50": true,
-      "densenet161": false,
-      "vgg16": false,
+      "densenet161": true,
+      "vgg16": true,
       "occlusion": true,
-      "gradcam": false,
-      "gradcamplusplus": false,
-      "integratedgradients": false,
-      "gradientshap": false,
-      "showdebug": false,
+      "gradcam": true,
+      "gradcamplusplus": true,
+      "integratedgradients": true,
+      "gradientshap": true,
+      "showdebug": true,
     }
   }
 }
@@ -154,7 +179,7 @@ const imagesToChoose = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"]
 
 export function ShowXAI() {
   const [data, formAction] = useActionState(updateData, null)
-  const formConfig = getFormConfig(data);
+  const formConfig = getFormConfig(data); // Mantain form selection after reload
 
   // Split into currently chosen image and rest of the images
   const curSelectedImage = formConfig.thyroidfile;
@@ -242,7 +267,7 @@ export function ShowXAI() {
                 </span>
                 {data.showDebug &&
                   <span className="center">
-                    <p className="text-base">Annotated Image (DEBUG ONLY)</p>
+                    <p className="text-base">Annotated Image (Debug Only)</p>
                     <img src={"showxai/" + data.thyroidFile + "/annotated_image.jpg"} width="180" height="180"/>
                   </span>
                 }
@@ -259,7 +284,7 @@ export function ShowXAI() {
                     <p className="text-base">Predicted Class: {singleModelData.predictedClass}</p>
                     <p className="text-base">Confidence: {singleModelData.confidence}</p>
                     {data.showDebug && 
-                      <p className="text-base">True Class (Debug only): {singleModelData.correctClass}</p>
+                      <p className="text-base">True Class (Debug Only): {singleModelData.correctClass}</p>
                     }
                   </span>
                   {singleModelData.saliencyMaps.map((saliencyMap) => (
@@ -271,6 +296,45 @@ export function ShowXAI() {
                   }
                 </div>
               ))
+              }
+              {/* Display debug table */}
+              {data.showDebug &&
+                <div>
+                  <div className="centerPadding">
+                    <p className="center text-xl font-bold">Explanable Methods Evaluation (Debug Only)</p>
+                  </div>
+                  <div className="showXAIEval">
+                    <table>
+                      <thead>
+                        <tr>
+                          <th>Model</th>
+                          <th>Explainable Method</th>
+                          <th>Correctness <br/> Relevant Pixels <br/> Confidence Change  </th>
+                          <th>Correctness <br/> Irrelevant Pixels <br/> Confidence Change  </th>
+                          <th>Contrastivity <br/> Predicted Class </th>
+                          <th>Contrastivity <br/> Confidence </th>
+                          <th>Coherence <br/> % of Relevant Pixels In Nodule </th>
+                          <th>Computational Efficiency  <br/> Execution Time <br/> (in seconds) </th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {data.xaiEval.map((dataRow) => (
+                          <tr className={dataRow.modelFullName + dataRow.xaiFullName}>
+                            <td>{dataRow.modelFullName}</td>
+                            <td>{dataRow.xaiFullName}</td>
+                            <td>{dataRow.cor_rel_pixels}</td>
+                            <td>{dataRow.cor_ir_pixels}</td>
+                            <td>{dataRow.con_class}</td>
+                            <td>{dataRow.con_conf}</td>
+                            <td>{dataRow.coh}</td>
+                            <td>{dataRow.com_time}</td>
+                          </tr>
+                        ))
+                        }
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
               }
             </div>
           }
