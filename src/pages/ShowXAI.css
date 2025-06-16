@@ -99,8 +99,20 @@
     justify-content: center;
 }
 
-.showXAIEval td, th {
+.showXAIEval td {
   border: 1px solid #dddddd;
   text-align: center;
   padding: 8px;
+}
+
+.showXAIEval th {
+  background-color: #ADD8E6;
+  border: 1px solid #dddddd;
+  text-align: center;
+  padding: 8px;
+}
+
+.showXAIEval tbody {
+  tr:nth-child(even) {background: #CCC}
+  tr:nth-child(odd) {background: #FFF}
 }
