@@ -122,7 +122,7 @@ async function updateData(_previousState: any, formData: any) {
 function getFormConfig(data: any) {
   if (data) {
     return {
-      "thyroidFile": data.formData.get("thyroidfile"),
+      "thyroidfile": (data.formData.get("thyroidfile")),
       "resnet50": ((data.formData.get("resnet50")) ? true : false),
       "densenet161": ((data.formData.get("densenet161")) ? true : false),
       "vgg16": ((data.formData.get("vgg16")) ? true : false),
@@ -135,7 +135,7 @@ function getFormConfig(data: any) {
     }
   } else {
     return {
-      "thyroidFile": "1",
+      "thyroidfile": "2",
       "resnet50": true,
       "densenet161": false,
       "vgg16": false,
@@ -149,11 +149,16 @@ function getFormConfig(data: any) {
   }
 }
 
+// All possible images to choose from
+const imagesToChoose = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"]
+
 export function ShowXAI() {
-  const [data, formAction] = useActionState(updateData, null);
+  const [data, formAction] = useActionState(updateData, null)
   const formConfig = getFormConfig(data);
 
-  console.log(formConfig.thyroidFile);
+  // Split into currently chosen image and rest of the images
+  const curSelectedImage = formConfig.thyroidfile;
+  const notSelectedImages = imagesToChoose.filter(e => e !== curSelectedImage);
 
   return (
     <div>
@@ -167,9 +172,13 @@ export function ShowXAI() {
       <form id="confirmOptions" className="confirmOptions" action={formAction}>
         <div className="centerPadding">
           <p className="downPadding text-xl font-bold">Choose file to upload</p>
+          {/* Start from chosen option than show other possible selections */}
           <select name="thyroidfile" id="thyroidfile">
-            <option value="1">Image 1</option>
-            <option value="2">Image 2</option>
+            {<option value={curSelectedImage}>Image {curSelectedImage}</option>}
+            {notSelectedImages.map((notSelectedImage) => (
+                <option value={notSelectedImage} key={notSelectedImage}>Image {notSelectedImage}</option>
+              ))
+            }
           </select>
         </div>
         <div className="selectParameters">
