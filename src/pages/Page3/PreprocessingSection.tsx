@@ -1,8 +1,15 @@
 import imgInitial from "@/assets/img_initial.jpg";
-import maskInitial from "@/assets/mask_initial.svg";
+import maskInitial from "@/assets/mask_initial.png";
 import imgPreprocessed from "@/assets/img_preprocessed.png";
 import maskPreprocessed from "@/assets/mask_preprocessed.png";
-import { ArrowRight, File, FileImage, Layers, Split } from "lucide-react";
+import {
+  ArrowRight,
+  File,
+  FileCode,
+  FileImage,
+  Layers,
+  Split,
+} from "lucide-react";
 
 export function PreprocessingSection() {
   return (
@@ -16,11 +23,11 @@ export function PreprocessingSection() {
           <div>
             <h3 className="text-lg font-semibold text-center mb-4">Przed</h3>
             <div className="space-y-4">
-              <div className="aspect-[560/360] w-full">
+              <div className="h-[300px] flex items-center justify-center">
                 <img
                   src={imgInitial}
                   alt="Initial ultrasound"
-                  className="rounded-lg w-full h-full object-contain"
+                  className="rounded-lg max-h-full w-auto object-contain"
                 />
               </div>
               <div className="flex justify-center items-center gap-2 text-sm text-muted-foreground">
@@ -31,15 +38,17 @@ export function PreprocessingSection() {
                 <span>|</span>
                 <span>.bmp</span>
               </div>
-              <div className="aspect-[560/360] w-full bg-white rounded-lg p-2 border border-gray-200">
-                <img
-                  src={maskInitial}
-                  alt="Initial mask"
-                  className="rounded-lg w-full h-full object-contain"
-                />
+              <div className="h-[300px] flex items-center justify-center">
+                <div className="bg-white rounded-lg p-2 border border-gray-200 h-full flex items-center justify-center">
+                  <img
+                    src={maskInitial}
+                    alt="Initial mask"
+                    className="rounded-lg max-h-full w-auto object-contain"
+                  />
+                </div>
               </div>
               <div className="flex justify-center items-center gap-2 text-sm text-muted-foreground">
-                <File className="size-4" />
+                <FileCode className="size-4" />
                 <span>.svg</span>
               </div>
 
@@ -63,29 +72,23 @@ export function PreprocessingSection() {
           <div>
             <h3 className="text-lg font-semibold text-center mb-4">Po</h3>
             <div className="space-y-4">
-              <div
-                style={{ maxHeight: "360px" }}
-                className="mx-auto flex items-center justify-center"
-              >
+              <div className="h-[300px] flex items-center justify-center">
                 <img
                   src={imgPreprocessed}
                   alt="Preprocessed ultrasound"
-                  className="rounded-lg h-full max-h-[360px] w-auto object-contain"
+                  className="rounded-lg max-h-full w-auto object-contain"
                 />
               </div>
               <div className="flex justify-center items-center gap-2 text-sm text-muted-foreground">
                 <FileImage className="size-4" />
                 <span>.png</span>
               </div>
-              <div
-                style={{ maxHeight: "360px" }}
-                className="mx-auto flex items-center justify-center"
-              >
-                <div className="bg-black rounded-lg p-2 h-full">
+              <div className="h-[300px] flex items-center justify-center">
+                <div className="bg-black rounded-lg p-2 h-full flex items-center justify-center">
                   <img
                     src={maskPreprocessed}
                     alt="Preprocessed mask"
-                    className="rounded-lg h-full max-h-[360px] w-auto object-contain"
+                    className="rounded-lg max-h-full w-auto object-contain"
                   />
                 </div>
               </div>
