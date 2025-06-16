@@ -68,7 +68,7 @@ async function readSingleModelData(thyroidFile: string, modelName: string, xaiDa
 
 async function updateData(_previousState: any, formData: any) {
   const thyroidFile = formData.get("thyroidfile");
-  const showDebug = formData.get("showdebug")
+  const showDebug = ((formData.get("showdebug") == "yes") ? true : false)
 
   // Read data about XAI
   var xaiData = []
@@ -115,12 +115,45 @@ async function updateData(_previousState: any, formData: any) {
     "thyroidFile": thyroidFile,
     "modelsData": modelsData,
     "showDebug": showDebug,
+    "formData": formData
+  }
+}
+
+function getFormConfig(data: any) {
+  if (data) {
+    return {
+      "thyroidFile": data.formData.get("thyroidfile"),
+      "resnet50": ((data.formData.get("resnet50")) ? true : false),
+      "densenet161": ((data.formData.get("densenet161")) ? true : false),
+      "vgg16": ((data.formData.get("vgg16")) ? true : false),
+      "occlusion": ((data.formData.get("occlusion")) ? true : false),
+      "gradcam": ((data.formData.get("gradcam")) ? true : false),
+      "gradcamplusplus": ((data.formData.get("gradcamplusplus")) ? true : false),
+      "integratedgradients": ((data.formData.get("integratedgradients")) ? true : false),
+      "gradientshap": ((data.formData.get("gradientshap")) ? true : false),
+      "showdebug": ((data.formData.get("showdebug") == "yes") ? true : false),
+    }
+  } else {
+    return {
+      "thyroidFile": "1",
+      "resnet50": true,
+      "densenet161": false,
+      "vgg16": false,
+      "occlusion": true,
+      "gradcam": false,
+      "gradcamplusplus": false,
+      "integratedgradients": false,
+      "gradientshap": false,
+      "showdebug": false,
+    }
   }
 }
 
 export function ShowXAI() {
   const [data, formAction] = useActionState(updateData, null);
-  console.log(data);
+  const formConfig = getFormConfig(data);
+
+  console.log(formConfig.thyroidFile);
 
   return (
     <div>
@@ -143,11 +176,11 @@ export function ShowXAI() {
           <span>
             <p className="center text-xl font-bold">Select Deep Learning Models</p>
             <div className="text-xl">
-              <input type="checkbox" id="resnet50" name="resnet50" value="resnet50" defaultChecked/>
+              <input type="checkbox" id="resnet50" name="resnet50" value="resnet50" defaultChecked={formConfig.resnet50}/>
               <label htmlFor="resnet50">ResNet50</label><br/>
-              <input type="checkbox" id="densenet161" name="densenet161" value="densenet161" defaultChecked/>
+              <input type="checkbox" id="densenet161" name="densenet161" value="densenet161" defaultChecked={formConfig.densenet161}/>
               <label htmlFor="densenet161">DenseNet161</label><br/>
-              <input type="checkbox" id="vgg16" name="vgg16" value="vgg16"/>
+              <input type="checkbox" id="vgg16" name="vgg16" value="vgg16" defaultChecked={formConfig.vgg16}/>
               <label htmlFor="vgg16">VGG16</label>
             </div>
           </span>
@@ -155,15 +188,15 @@ export function ShowXAI() {
           <span>
             <p className="center text-xl font-bold">Select Explainability Methods</p>
             <div className="text-xl">
-              <input type="checkbox" id="occlusion" name="occlusion" value="occlusion" defaultChecked/>
+              <input type="checkbox" id="occlusion" name="occlusion" value="occlusion" defaultChecked={formConfig.occlusion}/>
               <label htmlFor="occlusion">Occlusion</label><br/>
-              <input type="checkbox" id="gradcam" name="gradcam" value="gradcam"/>
+              <input type="checkbox" id="gradcam" name="gradcam" value="gradcam" defaultChecked={formConfig.gradcam}/>
               <label htmlFor="gradcam">Grad-CAM</label><br/>
-              <input type="checkbox" id="gradcamplusplus" name="gradcamplusplus" value="gradcamplusplus"/>
+              <input type="checkbox" id="gradcamplusplus" name="gradcamplusplus" value="gradcamplusplus" defaultChecked={formConfig.gradcamplusplus}/>
               <label htmlFor="gradcamplusplus">Grad-CAM++</label><br/>
-              <input type="checkbox" id="integratedgradients" name="integratedgradients" value="integratedgradients"/>
+              <input type="checkbox" id="integratedgradients" name="integratedgradients" value="integratedgradients" defaultChecked={formConfig.integratedgradients}/>
               <label htmlFor="integratedgradients">Integrated Gradients</label><br/>
-              <input type="checkbox" id="gradientshap" name="gradientshap" value="gradientshap"/>
+              <input type="checkbox" id="gradientshap" name="gradientshap" value="gradientshap" defaultChecked={formConfig.gradientshap}/>
               <label htmlFor="gradientshap">Gradient SHAP</label>
             </div>
           </span>
@@ -172,9 +205,9 @@ export function ShowXAI() {
             <p className="center text-xl font-bold">Show Evaluation Criteria</p>
             <p className="center text-xl font-bold">(Debug Only)</p>
             <div className="text-xl">
-              <input type="radio" id="showdebugyes" name="showdebug" value="yes" defaultChecked/>
+              <input type="radio" id="showdebugyes" name="showdebug" value="yes" defaultChecked={formConfig.showdebug}/>
               <label htmlFor="showdebugyes">Yes</label><br/>
-              <input type="radio" id="showdebugno" name="showdebug" value="no"/>
+              <input type="radio" id="showdebugno" name="showdebug" value="no" defaultChecked={!formConfig.showdebug}/>
               <label htmlFor="showdebugno">No</label><br/>
             </div>
           </span>
@@ -198,7 +231,7 @@ export function ShowXAI() {
                   <p className="text-base">Original Image</p>
                   <img src={"showxai/" + data.thyroidFile + "/image.jpg"} width="180" height="180"/>
                 </span>
-                {data.showDebug == "yes" &&
+                {data.showDebug &&
                   <span className="center">
                     <p className="text-base">Annotated Image (DEBUG ONLY)</p>
                     <img src={"showxai/" + data.thyroidFile + "/annotated_image.jpg"} width="180" height="180"/>
@@ -216,7 +249,7 @@ export function ShowXAI() {
                     <p className="text-base">{singleModelData.modelFullName}</p>
                     <p className="text-base">Predicted Class: {singleModelData.predictedClass}</p>
                     <p className="text-base">Confidence: {singleModelData.confidence}</p>
-                    {data.showDebug == "yes" && 
+                    {data.showDebug && 
                       <p className="text-base">True Class (Debug only): {singleModelData.correctClass}</p>
                     }
                   </span>
