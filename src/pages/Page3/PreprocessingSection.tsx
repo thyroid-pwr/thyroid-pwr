@@ -3,6 +3,7 @@ import maskInitial from "@/assets/mask_initial.png";
 import imgPreprocessed from "@/assets/img_preprocessed.png";
 import maskPreprocessed from "@/assets/mask_preprocessed.png";
 import {
+  ArrowDown,
   ArrowRight,
   File,
   FileCode,
@@ -64,8 +65,9 @@ export function PreprocessingSection() {
           </div>
 
           {/* Arrow */}
-          <div className="hidden md:flex items-center justify-center">
-            <ArrowRight className="size-12 text-muted-foreground" />
+          <div className="flex items-center justify-center">
+            <ArrowRight className="hidden md:block size-12 text-muted-foreground" />
+            <ArrowDown className="md:hidden size-12 text-muted-foreground" />
           </div>
 
           {/* Right side - Processed */}
