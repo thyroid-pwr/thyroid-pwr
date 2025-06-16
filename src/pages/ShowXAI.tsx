@@ -1,5 +1,5 @@
 import "./ShowXAI.css";
-import { useState, useEffect } from "react";
+import { useState, useActionState } from "react";
 
 // TO DO - every 2nd row gray
 // TO DO - sort by correctness, highlight correctness row
@@ -36,76 +36,91 @@ async function readClass(filepath: string) {
   }
 }
 
-async function readSingleModelData(thyroidFile: string, modelName: string) {
-  console.log(thyroidFile)
-  console.log("showxai/" + thyroidFile + "/" + modelName + "/predicted_class.txt")
+async function readSingleModelData(thyroidFile: string, modelName: string, xaiData: string[][], showDebug: boolean) {
+  // Read model data
   const modelFullName = getModelFullName(modelName);
   const predictedClass = await readClass("showxai/" + thyroidFile + "/" + modelName + "/predicted_class.txt");
   const confidence = await readText("showxai/" + thyroidFile + "/" + modelName + "/confidence.txt");
-  const correctClass = await readClass("showxai/" + thyroidFile + "/" + modelName + "/correct_class.txt");
+
+  // Read debug data
+  var correctClass = null;
+  if (showDebug) {
+    correctClass = await readClass("showxai/" + thyroidFile + "/" + modelName + "/correct_class.txt");
+  }
+
+  // Read XAI (saliency maps)
+  var saliencyMaps: { xaiFullName: string; filepath: string; }[] = []
+  xaiData.forEach(([xai, xaiFullName]) => {
+    saliencyMaps.push({
+      xaiFullName: xaiFullName,
+      filepath: "showxai/" + thyroidFile + "/" + modelName + "/" + xai + "/saliency_map.jpg"
+    })
+  });
+  
   return {
     modelFullName: modelFullName, 
     predictedClass: predictedClass, 
     confidence: confidence, 
-    correctClass: correctClass
+    correctClass: correctClass,
+    saliencyMaps: saliencyMaps,
   }
 }
 
+async function updateData(_previousState: any, formData: any) {
+  const thyroidFile = formData.get("thyroidfile");
+  const showDebug = formData.get("showdebug")
+
+  // Read data about XAI
+  var xaiData = []
+  if (formData.get("occlusion")) {
+    xaiData.push(["occlusion", "Occlusion"])
+  }
+  if (formData.get("gradcam")) {
+    xaiData.push(["gradcam", "Grad-CAM"])
+  }
+  if (formData.get("gradcamplusplus")) {
+    xaiData.push(["gradcamplusplus", "Grad-CAM++"])
+  }
+  if (formData.get("integratedgradients")) {
+    xaiData.push(["integratedgradients", "Integrated Gradients"])
+  }
+  if (formData.get("gradientshap")) {
+    xaiData.push(["gradientshap", "Gradient SHAP"])
+  }
+
+  // Read data about models and generated saliency map
+  var modelsData = []
+  if (formData.get("resnet50")) {
+    modelsData.push(await readSingleModelData(thyroidFile, "resnet50", xaiData, showDebug))
+  }
+  if (formData.get("densenet161")) {
+    modelsData.push(await readSingleModelData(thyroidFile, "densenet161", xaiData, showDebug))
+  }
+  if (formData.get("vgg16")) {
+    modelsData.push(await readSingleModelData(thyroidFile, "vgg16", xaiData, showDebug))
+  }
+
+  // Verify config settings to later display potential errors
+  const isOneModelChosen = modelsData.length > 0;
+  const isOneXAIChosen = xaiData.length > 0;
+  const isCorrectConfig = isOneModelChosen && isOneXAIChosen;
+  const configCheck = {
+    "isOneModelChosen": isOneModelChosen,
+    "isOneXAIChosen": isOneXAIChosen,
+    "isCorrectConfig": isCorrectConfig,
+  }
+
+  return {
+    "configCheck": configCheck,
+    "thyroidFile": thyroidFile,
+    "modelsData": modelsData,
+    "showDebug": showDebug,
+  }
+}
 
 export function ShowXAI() {
-  // States collected by form
-  const [thyroidFile, setThyroidFile] = useState("");
-  const [resnet50, setResnet50] = useState(false);
-  const [densenet161, setDensenet161] = useState(false);
-  const [vgg16, setVgg16] = useState(false);
-  const [occlusion, setOcclusion] = useState(false);
-  const [gradcam, setGradcam] = useState(false);
-  const [gradcamplusplus, setGradcamplusplus] = useState(false);
-  const [integratedgradients, setIntegratedGradients] = useState(false);
-  const [gradientshap, setGradientshap] = useState(false);
-  const [showevaluation, setShowevaluation] = useState("yes");
-
-  // States collected by functions
-  const [resnet50data, setResnet50Data] = useState<any>(null);
-  const [densenet161data, setDensenet161Data] = useState<any>(null);
-  const [vgg16data, setVgg16Data] = useState<any>(null);
-
-  const onSubmit = (event: any) => {
-    event.preventDefault();
-    setThyroidFile(event.target.thyroidfile.value);
-    setResnet50(event.target.resnet50.checked)
-    setDensenet161(event.target.densenet161.checked)
-    setVgg16(event.target.vgg16.checked)
-    setOcclusion(event.target.occlusion.checked)
-    setGradcam(event.target.gradcam.checked)
-    setGradcamplusplus(event.target.gradcamplusplus.checked)
-    setIntegratedGradients(event.target.integratedgradients.checked)
-    setGradientshap(event.target.gradientshap.checked)
-    setShowevaluation(event.target.showdebug.value)
-  };
-
-  // Read data for each model 
-  // TO DO - how to read this properly
-  useEffect(() => {
-    readSingleModelData(thyroidFile, "resnet50")
-      .then(setResnet50Data);
-  }, []);
-  useEffect(() => {
-    readSingleModelData(thyroidFile, "densenet161")
-      .then(setDensenet161Data);
-  }, []);
-  useEffect(() => {
-    readSingleModelData(thyroidFile, "vgg16")
-      .then(setVgg16Data);
-  }, []);
-
-  console.log(thyroidFile)
-
-  // Define if config is correct
-  const isOneModelChosen = resnet50 || densenet161 || vgg16;
-  const isOneXAIChosen = occlusion || gradcam || gradcamplusplus || integratedgradients || gradientshap;
-  const isCorrectConfig = isOneModelChosen && isOneXAIChosen;
-
+  const [data, formAction] = useActionState(updateData, null);
+  console.log(data);
 
   return (
     <div>
@@ -116,7 +131,7 @@ export function ShowXAI() {
         </span>
       </div>
       {/* Form to send data */}
-      <form id="confirmOptions" className="confirmOptions" onSubmit={onSubmit}>
+      <form id="confirmOptions" className="confirmOptions" action={formAction}>
         <div className="centerPadding">
           <p className="downPadding text-xl font-bold">Choose file to upload</p>
           <select name="thyroidfile" id="thyroidfile">
@@ -130,7 +145,7 @@ export function ShowXAI() {
             <div className="text-xl">
               <input type="checkbox" id="resnet50" name="resnet50" value="resnet50" defaultChecked/>
               <label htmlFor="resnet50">ResNet50</label><br/>
-              <input type="checkbox" id="densenet161" name="densenet161" value="densenet161"/>
+              <input type="checkbox" id="densenet161" name="densenet161" value="densenet161" defaultChecked/>
               <label htmlFor="densenet161">DenseNet161</label><br/>
               <input type="checkbox" id="vgg16" name="vgg16" value="vgg16"/>
               <label htmlFor="vgg16">VGG16</label>
@@ -169,79 +184,66 @@ export function ShowXAI() {
         </div>
       </form>
       {/* Only run this code when config was chosen */}
-      {thyroidFile &&
+      {data &&
         <div>
           {/* Display chosen options */}
-          {isCorrectConfig &&
-              <div>
-                {/* Display original image and possibly debug image */}
-                <div className="centerPadding">
-                  <p className="center text-xl font-bold">Loaded Data</p>
-                </div>
-                <div className="showOriginalImage">
+          {data.configCheck.isCorrectConfig &&
+            <div>
+              {/* Display original image and possibly debug image */}
+              <div className="centerPadding">
+                <p className="center text-xl font-bold">Loaded Data</p>
+              </div>
+              <div className="showOriginalImage">
+                <span className="center">
+                  <p className="text-base">Original Image</p>
+                  <img src={"showxai/" + data.thyroidFile + "/image.jpg"} width="180" height="180"/>
+                </span>
+                {data.showDebug == "yes" &&
                   <span className="center">
-                    <p className="text-base">Original Image</p>
-                    <img src={"showxai/" + thyroidFile + "/image.jpg"} width="180" height="180"/>
+                    <p className="text-base">Annotated Image (DEBUG ONLY)</p>
+                    <img src={"showxai/" + data.thyroidFile + "/annotated_image.jpg"} width="180" height="180"/>
                   </span>
-                  {showevaluation == "yes" &&
-                    <span className="center">
-                      <p className="text-base">Annotated Image (DEBUG ONLY)</p>
-                      <img src={"showxai/" + thyroidFile + "/annotated_image.jpg"} width="180" height="180"/>
-                    </span>
-                  }
-                </div>
-                {/* Display XAI methods saliency maps */}
-                <div className="centerPadding">
-                  <p className="center text-xl font-bold">Generated Explanations</p>
-                </div>
-                {/* TO DO - if for XAI methods */}
-                {resnet50 &&
-                  <div className="showXAIMethods">
-                    <span className="center">
-                      <p className="text-base">{resnet50data.modelFullName}</p>
-                      <p className="text-base">Predicted Class: {resnet50data.predictedClass}</p>
-                      <p className="text-base">Confidence: {resnet50data.confidence}</p>
-                      {showevaluation == "yes" &&
-                        <p className="text-base">True Class (Debug only): {resnet50data.correctClass}</p>
-                      }
-                    </span>
-                    <span className="center">
-                      <p className="text-base">Occlusion</p>
-                      <img src="showxai/0/resnet50/occlusion/saliency_map.jpg" width="180" height="180"/>
-                    </span>
-                    <span className="center">
-                      <p className="text-base">Grad-CAM</p>
-                      <img src="showxai/0/resnet50/gradcam/saliency_map.jpg" width="180" height="180"/>
-                    </span>
-                    <span className="center">
-                      <p className="text-base">Grad-CAM++</p>
-                      <img src="showxai/0/resnet50/gradcamplusplus/saliency_map.jpg" width="180" height="180"/>
-                    </span>
-                    <span className="center">
-                      <p className="text-base">Integrated Gradients</p>
-                      <img src="showxai/0/resnet50/integratedgradients/saliency_map.jpg" width="180" height="180"/>
-                    </span>
-                    <span className="center">
-                      <p className="text-base">Gradient SHAP</p>
-                      <img src="showxai/0/resnet50/gradientshap/saliency_map.jpg" width="180" height="180"/>
-                    </span>
-                  </div>
                 }
               </div>
+              {/* Display XAI methods saliency maps */}
+              <div className="centerPadding">
+                <p className="center text-xl font-bold">Generated Explanations</p>
+              </div>
+              {/* Display XAI Methods */}
+              {data.modelsData.map((singleModelData) => (
+                <div className="showXAIMethods" key={singleModelData.modelFullName}>
+                  <span className="center">
+                    <p className="text-base">{singleModelData.modelFullName}</p>
+                    <p className="text-base">Predicted Class: {singleModelData.predictedClass}</p>
+                    <p className="text-base">Confidence: {singleModelData.confidence}</p>
+                    {data.showDebug == "yes" && 
+                      <p className="text-base">True Class (Debug only): {singleModelData.correctClass}</p>
+                    }
+                  </span>
+                  {singleModelData.saliencyMaps.map((saliencyMap) => (
+                    <span className="center" key={saliencyMap.xaiFullName}>
+                      <p className="text-base">{saliencyMap.xaiFullName}</p>
+                      <img src={saliencyMap.filepath} width="180" height="180"/>
+                    </span>
+                  ))
+                  }
+                </div>
+              ))
+              }
+            </div>
           }
-
           {/* Display error message if incorrect config */}
-          {!isCorrectConfig &&
+          {!data.configCheck.isCorrectConfig &&
             <div className="centerPadding">
               <span className="error downPadding">
                 <p>ERROR</p>
               </span>
-              {!isOneModelChosen && 
+              {!data.configCheck.isOneModelChosen && 
                 <span className="error downPadding">
                   <p>You need to choose at least one model</p>
                 </span>
               }
-              {!isOneXAIChosen && 
+              {!data.configCheck.isOneXAIChosen && 
                 <span className="error downPadding">
                   <p>You need to choose at least one XAI method</p>
                 </span>
