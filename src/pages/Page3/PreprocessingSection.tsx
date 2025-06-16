@@ -2,7 +2,7 @@ import imgInitial from "@/assets/img_initial.jpg";
 import maskInitial from "@/assets/mask_initial.svg";
 import imgPreprocessed from "@/assets/img_preprocessed.png";
 import maskPreprocessed from "@/assets/mask_preprocessed.png";
-import { ArrowRight, File, FileImage } from "lucide-react";
+import { ArrowRight, File, FileImage, Layers, Split } from "lucide-react";
 
 export function PreprocessingSection() {
   return (
@@ -41,6 +41,15 @@ export function PreprocessingSection() {
               <div className="flex justify-center items-center gap-2 text-sm text-muted-foreground">
                 <File className="size-4" />
                 <span>.svg</span>
+              </div>
+
+              <div className="!mt-8 flex items-center justify-center gap-2 text-sm text-muted-foreground">
+                <Layers className="size-4" />
+                <span className="font-medium text-gray-600">TNCD</span>
+                <span className="text-gray-400">+</span>
+                <span className="font-medium text-gray-600">Stanford</span>
+                <span className="text-gray-400">+</span>
+                <span className="font-medium text-gray-600">...others</span>
               </div>
             </div>
           </div>
@@ -83,6 +92,15 @@ export function PreprocessingSection() {
               <div className="flex justify-center items-center gap-2 text-sm text-muted-foreground">
                 <FileImage className="size-4" />
                 <span>.png</span>
+              </div>
+
+              <div className="!mt-8 flex items-center justify-center gap-2 text-sm text-muted-foreground">
+                <Split className="size-4" />
+                <span className="font-medium text-gray-600">Train</span>
+                <span className="text-gray-400">/</span>
+                <span className="font-medium text-gray-600">Validation</span>
+                <span className="text-gray-400">/</span>
+                <span className="font-medium text-gray-600">Test</span>
               </div>
             </div>
           </div>
