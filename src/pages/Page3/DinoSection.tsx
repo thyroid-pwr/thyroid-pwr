@@ -1,5 +1,6 @@
 import dinoArchitecture from "@/assets/dino-architecture.png";
 import { ExternalLink } from "lucide-react";
+import { DinoFlowchart } from "@/components/DinoFlowchart";
 
 export function DinoSection() {
   return (
@@ -14,6 +15,16 @@ export function DinoSection() {
         <br />
         <br />
       </p>
+
+      {/* Pipeline Flowchart */}
+      <div className="w-full bg-white rounded-lg shadow-sm">
+        <h3 className="text-xl font-semibold text-center pt-4">
+          Medical Image Classification Pipeline
+        </h3>
+        <DinoFlowchart />
+      </div>
+
+      {/* DINO Architecture Image */}
       <div className="flex justify-center items-center w-full">
         <img
           src={dinoArchitecture}
@@ -21,6 +32,7 @@ export function DinoSection() {
           className="max-w-[800px] max-h-[500px] w-auto h-auto object-contain"
         />
       </div>
+
       <div className="mt-4 flex justify-center">
         <a
           href="https://arxiv.org/abs/2104.14294"
