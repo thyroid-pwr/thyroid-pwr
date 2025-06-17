@@ -1,6 +1,9 @@
-import dinoArchitecture from "@/assets/dino-architecture.png";
+import { ContrastiveLearningSection } from "./ContrastiveLearningSection";
 import { DatasetsSection } from "./DatasetsSection";
+import { DinoSection } from "./DinoSection";
 import { PreprocessingSection } from "./PreprocessingSection";
+import { SystemArchitectureDiagram } from "./SystemArchitectureDiagram";
+import { ExplainableAiSection } from "./ExplainableAiSection";
 
 export function Page3() {
   return (
@@ -9,30 +12,14 @@ export function Page3() {
         Architektura systemu
       </h1>
 
-      <DatasetsSection />
-
-      <PreprocessingSection />
-
-      <h2 className="scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight first:mt-0">
-        DINO (self-distillation with no labels)
-      </h2>
-      <p className="leading-7 [&:not(:first-child)]:mt-6">
-        krótki opis czym jest dino
-      </p>
-      <a
-        href="https://arxiv.org/abs/2104.14294"
-        target="_blank"
-        rel="noopener noreferrer"
-        className="text-blue-500 hover:underline"
-      >
-        Artykuł: Emerging Properties in Self-Supervised Vision Transformers
-      </a>
-
-      <img
-        src={dinoArchitecture}
-        alt="DINO architecture"
-        className="max-w-full max-h-[600px] object-contain"
-      />
+      <div className="flex flex-col gap-20">
+        <SystemArchitectureDiagram />
+        <DatasetsSection />
+        <PreprocessingSection />
+        <DinoSection />
+        <ContrastiveLearningSection />
+        <ExplainableAiSection />
+      </div>
     </>
   );
 }

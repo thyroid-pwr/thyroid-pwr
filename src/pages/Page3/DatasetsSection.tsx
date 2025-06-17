@@ -51,11 +51,11 @@ const thyroidDatasetsWithMalignancy = [
 
 export function DatasetsSection() {
   return (
-    <>
+    <section className="space-y-8">
       <h2 className="scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight first:mt-0">
         Zbiory danych
       </h2>
-      <div className="grid md:grid-cols-3 gap-4 my-4">
+      <div className="grid md:grid-cols-3 gap-4">
         <Card className="flex flex-col">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
@@ -147,6 +147,6 @@ export function DatasetsSection() {
           </CardContent>
         </Card>
       </div>
-    </>
+    </section>
   );
 }

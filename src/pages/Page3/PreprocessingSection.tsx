@@ -14,12 +14,12 @@ import {
 
 export function PreprocessingSection() {
   return (
-    <div className="my-8">
+    <section className="space-y-8">
       <h2 className="scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight first:mt-0">
         Preprocessing
       </h2>
       <div className="mx-auto max-w-5xl">
-        <div className="mt-6 grid md:grid-cols-[1fr_auto_1fr] gap-6">
+        <div className="grid md:grid-cols-[1fr_auto_1fr] gap-6">
           {/* Left side - Original */}
           <div>
             <h3 className="text-lg font-semibold text-center mb-4">Przed</h3>
@@ -111,6 +111,6 @@ export function PreprocessingSection() {
           </div>
         </div>
       </div>
-    </div>
+    </section>
   );
 }
