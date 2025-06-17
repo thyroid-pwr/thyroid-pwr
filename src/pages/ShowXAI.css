@@ -1,0 +1,118 @@
+.center {
+    text-align: center;
+}
+
+.centerPadding {
+    text-align: center;
+    padding-top: 30px;
+}
+
+.error {
+    font-size: 40px;
+    color: red;
+}
+
+.downPadding {
+    padding-bottom: 5px;
+}
+
+.selectParameters {
+    padding-top: 20px;
+    padding-left: 50px;
+    padding-right: 50px;
+    text-align: left;
+    display: grid;
+    grid-template-columns: 25% 12.5% 25% 12.5% 25%;
+}
+
+.selectParameters label{
+    font-size: 20px;
+    margin: 10px 10px 10px 10px;
+}
+
+.selectParameters input{
+    width: 18px;
+    height: 18px;
+    margin: 10px 10px 10px 10px;
+}
+
+.confirmChoice {
+    padding-top: 20px;
+    text-align: center;
+}
+
+.confirm {
+    padding-top: 50px;
+    text-align: center;
+}
+
+.confirm button{
+    width: 200px;
+    height: 60px;
+    border: 1px solid black;
+    border-top-right-radius:5px;
+    border-bottom-right-radius:5px;
+}
+
+.confirm button:hover {
+    background-color: lightblue; 
+}
+
+.showOriginalImage {
+    display: flex;
+    margin-left: auto;
+    margin-right: auto;
+    align-items: center;
+    justify-content: center;
+}
+
+.showOriginalImage span {
+    padding: 20px
+}
+
+.showOriginalImage img {
+    padding-top: 10px;
+}
+
+.showXAIMethods {
+    display: flex;
+    margin-left: auto;
+    margin-right: auto;
+    align-items: center;
+    justify-content: center;
+}
+
+.showXAIMethods span {
+    padding: 20px;
+}
+
+.showXAIMethods img {
+    padding-top: 10px;
+}
+
+.showXAIEval {
+    padding-top: 10px;
+    display: flex;
+    margin-left: auto;
+    margin-right: auto;
+    align-items: center;
+    justify-content: center;
+}
+
+.showXAIEval td {
+  border: 1px solid #dddddd;
+  text-align: center;
+  padding: 8px;
+}
+
+.showXAIEval th {
+  background-color: #ADD8E6;
+  border: 1px solid #dddddd;
+  text-align: center;
+  padding: 8px;
+}
+
+.showXAIEval tbody {
+  tr:nth-child(even) {background: #CCC}
+  tr:nth-child(odd) {background: #FFF}
+}

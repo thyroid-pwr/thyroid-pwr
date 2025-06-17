@@ -30,7 +30,7 @@ export function RootLayout() {
               </NavigationMenuItem>
               <NavigationMenuItem>
                 <NavigationMenuLink asChild>
-                  <Link to="/page4">Page 4</Link>
+                  <Link to="/showxai">Show XAI</Link>
                 </NavigationMenuLink>
               </NavigationMenuItem>
             </NavigationMenuList>
