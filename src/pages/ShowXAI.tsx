@@ -351,7 +351,7 @@ export function ShowXAI() {
               }
               {!data.configCheck.isOneXAIChosen && 
                 <span className="error downPadding">
-                  <p>You need to choose at least one XAI method</p>
+                  <p>You need to choose at least one explainability method</p>
                 </span>
               }
             </div>
