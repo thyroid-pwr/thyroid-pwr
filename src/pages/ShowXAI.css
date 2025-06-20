@@ -106,9 +106,10 @@
 }
 
 .showXAIEval th {
-  background-color: #ADD8E6;
+  background-color: black;
   border: 1px solid #dddddd;
   text-align: center;
+  color: white;
   padding: 8px;
 }
 
