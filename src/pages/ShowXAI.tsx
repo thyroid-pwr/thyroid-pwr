@@ -1,10 +1,6 @@
 import "./ShowXAI.css";
 import { useActionState } from "react";
 
-// TO DO - every 2nd row gray
-// TO DO - sort by correctness, highlight correctness row
-// TO DO - add correct class in debug
-
 function getModelFullName(modelName: string) {
   switch (modelName) {
     case "resnet50":
