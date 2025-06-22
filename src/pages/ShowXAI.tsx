@@ -466,6 +466,7 @@ export function ShowXAI() {
                       <tbody>
                         {data.xaiEval.map((dataRow) => (
                           <tr
+                            key={`${dataRow.modelFullName}-${dataRow.xaiFullName}`}
                             className={
                               dataRow.modelFullName + dataRow.xaiFullName
                             }
