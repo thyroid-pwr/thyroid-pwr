@@ -1,10 +1,6 @@
 import "./ShowXAI.css";
 import { useActionState } from "react";
 
-// TO DO - every 2nd row gray
-// TO DO - sort by correctness, highlight correctness row
-// TO DO - add correct class in debug
-
 function getModelFullName(modelName: string) {
   switch (modelName) {
     case "resnet50":
@@ -435,7 +431,7 @@ export function ShowXAI() {
                 <div>
                   <div className="centerPadding">
                     <p className="center text-xl font-bold">
-                      Explanable Methods Evaluation (Debug Only)
+                      Explanaible Methods Evaluation (Debug Only)
                     </p>
                   </div>
                   <div className="showXAIEval">
