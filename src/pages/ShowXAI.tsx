@@ -221,7 +221,7 @@ export function ShowXAI() {
       {/* Title */}
       <div className="text-6xl font-bold">
         <span className="center">
-          <p>Explanaible Methods</p>
+          <p>Explainable Methods</p>
         </span>
       </div>
       {/* Form to send data */}
@@ -431,7 +431,7 @@ export function ShowXAI() {
                 <div>
                   <div className="centerPadding">
                     <p className="center text-xl font-bold">
-                      Explanaible Methods Evaluation (Debug Only)
+                      Explainable Methods Evaluation (Debug Only)
                     </p>
                   </div>
                   <div className="showXAIEval">
