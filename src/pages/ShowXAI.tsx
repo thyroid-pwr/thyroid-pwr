@@ -58,184 +58,120 @@ async function readSingleModelData(
   chosenXAIs: string[],
   showDebug: boolean
 ) {
-  // Read model data
   const modelFullName = getModelFullName(modelName);
-  const predictedClass = getPredictionName(
-    await readText(
-      "showxai/" + thyroidFile + "/" + modelName + "/predicted_class.txt"
-    )
-  );
-  const confidence = await readText(
-    "showxai/" + thyroidFile + "/" + modelName + "/confidence.txt"
+  const basePath = `showxai/${thyroidFile}/${modelName}`;
+
+  // Prepare all promises in parallel
+  const promises = [
+    readText(`${basePath}/predicted_class.txt`).then(getPredictionName),
+    readText(`${basePath}/confidence.txt`),
+    ...(showDebug
+      ? [readText(`${basePath}/correct_class.txt`).then(getPredictionName)]
+      : []),
+  ];
+
+  // Wait for all promises to resolve
+  const [predictedClass, confidence, correctClass] = await Promise.all(
+    promises
   );
 
-  // Read debug data
-  var correctClass = null;
-  if (showDebug) {
-    correctClass = getPredictionName(
-      await readText(
-        "showxai/" + thyroidFile + "/" + modelName + "/correct_class.txt"
-      )
-    );
-  }
-
-  // Read XAI (saliency maps)
-  var saliencyMaps: { xaiFullName: string; filepath: string }[] = [];
-  chosenXAIs.forEach((xaiName) => {
-    saliencyMaps.push({
-      xaiFullName: getXAIFullName(xaiName),
-      filepath:
-        "showxai/" +
-        thyroidFile +
-        "/" +
-        modelName +
-        "/" +
-        xaiName +
-        "/saliency_map.jpg",
-    });
-  });
+  // Prepare saliency map data
+  const saliencyMaps = chosenXAIs.map((xaiName) => ({
+    xaiFullName: getXAIFullName(xaiName),
+    filepath: `${basePath}/${xaiName}/saliency_map.jpg`,
+  }));
 
   return {
-    modelFullName: modelFullName,
-    predictedClass: predictedClass,
-    confidence: confidence,
-    correctClass: correctClass,
-    saliencyMaps: saliencyMaps,
+    modelFullName,
+    predictedClass,
+    confidence,
+    correctClass: correctClass || null,
+    saliencyMaps,
   };
 }
 
 async function updateData(_previousState: any, formData: any) {
   const thyroidFile = formData.get("thyroidfile");
-  const showDebug = formData.get("showdebug") == "yes" ? true : false;
+  const showDebug = formData.get("showdebug") == "yes";
 
   // Get which models were chosen by the user
-  var chosenModels: string[] = [];
-  if (formData.get("resnet50") !== null) chosenModels.push("resnet50");
-  if (formData.get("densenet161") !== null) chosenModels.push("densenet161");
-  if (formData.get("vgg16") !== null) chosenModels.push("vgg16");
+  const chosenModels = ["resnet50", "densenet161", "vgg16"].filter(
+    (model) => formData.get(model) !== null
+  );
 
   // Get which XAI methods were chosen by the user
-  var chosenXAIs: string[] = [];
-  if (formData.get("occlusion") !== null) chosenXAIs.push("occlusion");
-  if (formData.get("gradcam") !== null) chosenXAIs.push("gradcam");
-  if (formData.get("gradcamplusplus") !== null)
-    chosenXAIs.push("gradcamplusplus");
-  if (formData.get("integratedgradients") !== null)
-    chosenXAIs.push("integratedgradients");
-  if (formData.get("gradientshap") !== null) chosenXAIs.push("gradientshap");
+  const chosenXAIs = [
+    "occlusion",
+    "gradcam",
+    "gradcamplusplus",
+    "integratedgradients",
+    "gradientshap",
+  ].filter((xai) => formData.get(xai) !== null);
 
-  // Read models data (results and saliency maps)
-  var modelsData: {
-    modelFullName: string;
-    predictedClass: string;
-    confidence: string;
-    correctClass: string | null;
-    saliencyMaps: { xaiFullName: string; filepath: string }[];
-  }[] = [];
-  for (let i = 0; i < chosenModels.length; i++) {
-    modelsData.push(
-      await readSingleModelData(
-        thyroidFile,
-        chosenModels[i],
-        chosenXAIs,
-        showDebug
-      )
-    );
-  }
+  // Read models data in parallel
+  const modelsData = await Promise.all(
+    chosenModels.map((model) =>
+      readSingleModelData(thyroidFile, model, chosenXAIs, showDebug)
+    )
+  );
 
-  // Read debug XAI evaluation data
-  var xaiEval: {
-    modelFullName: string;
-    xaiFullName: string;
-    cor_rel_pixels: string;
-    cor_ir_pixels: string;
-    con_class: string;
-    con_conf: string;
-    coh: string;
-    com_time: string;
-  }[] = [];
-  for (let i = 0; i < chosenModels.length; i++) {
-    for (let j = 0; j < chosenXAIs.length; j++) {
-      xaiEval.push({
-        modelFullName: getModelFullName(chosenModels[i]),
-        xaiFullName: getXAIFullName(chosenXAIs[j]),
-        cor_rel_pixels: await readText(
-          "showxai/" +
-            thyroidFile +
-            "/" +
-            chosenModels[i] +
-            "/" +
-            chosenXAIs[j] +
-            "/correctness_confidence_change_relevant_pixels.txt"
+  // Read XAI evaluation data in parallel
+  const xaiEvalPromises = chosenModels.flatMap((modelName) =>
+    chosenXAIs.map(async (xaiName) => {
+      const basePath = `showxai/${thyroidFile}/${modelName}/${xaiName}`;
+      const [
+        cor_rel_pixels,
+        cor_ir_pixels,
+        con_class,
+        con_conf,
+        coh,
+        com_time,
+      ] = await Promise.all([
+        readText(
+          `${basePath}/correctness_confidence_change_relevant_pixels.txt`
         ),
-        cor_ir_pixels: await readText(
-          "showxai/" +
-            thyroidFile +
-            "/" +
-            chosenModels[i] +
-            "/" +
-            chosenXAIs[j] +
-            "/correctness_confidence_change_irrelevant_pixels.txt"
+        readText(
+          `${basePath}/correctness_confidence_change_irrelevant_pixels.txt`
         ),
-        con_class: getPredictionName(
-          await readText(
-            "showxai/" +
-              thyroidFile +
-              "/" +
-              chosenModels[i] +
-              "/" +
-              chosenXAIs[j] +
-              "/contrastivity_predicted_class.txt"
-          )
+        readText(`${basePath}/contrastivity_predicted_class.txt`).then(
+          getPredictionName
         ),
-        con_conf: await readText(
-          "showxai/" +
-            thyroidFile +
-            "/" +
-            chosenModels[i] +
-            "/" +
-            chosenXAIs[j] +
-            "/contrastivity_confidence.txt"
-        ),
-        coh: await readText(
-          "showxai/" +
-            thyroidFile +
-            "/" +
-            chosenModels[i] +
-            "/" +
-            chosenXAIs[j] +
-            "/coherence.txt"
-        ),
-        com_time: await readText(
-          "showxai/" +
-            thyroidFile +
-            "/" +
-            chosenModels[i] +
-            "/" +
-            chosenXAIs[j] +
-            "/computational_efficiency.txt"
-        ),
-      });
-    }
-  }
+        readText(`${basePath}/contrastivity_confidence.txt`),
+        readText(`${basePath}/coherence.txt`),
+        readText(`${basePath}/computational_efficiency.txt`),
+      ]);
 
-  // Verify config settings to later display potential errors
+      return {
+        modelFullName: getModelFullName(modelName),
+        xaiFullName: getXAIFullName(xaiName),
+        cor_rel_pixels,
+        cor_ir_pixels,
+        con_class,
+        con_conf,
+        coh,
+        com_time,
+      };
+    })
+  );
+
+  const xaiEval = await Promise.all(xaiEvalPromises);
+
+  // Verify config settings
   const isOneModelChosen = chosenModels.length > 0;
   const isOneXAIChosen = chosenXAIs.length > 0;
   const isCorrectConfig = isOneModelChosen && isOneXAIChosen;
-  const configCheck = {
-    isOneModelChosen: isOneModelChosen,
-    isOneXAIChosen: isOneXAIChosen,
-    isCorrectConfig: isCorrectConfig,
-  };
 
   return {
-    configCheck: configCheck,
-    thyroidFile: thyroidFile,
-    modelsData: modelsData,
-    showDebug: showDebug,
-    xaiEval: xaiEval,
-    formData: formData,
+    configCheck: {
+      isOneModelChosen,
+      isOneXAIChosen,
+      isCorrectConfig,
+    },
+    thyroidFile,
+    modelsData,
+    showDebug,
+    xaiEval,
+    formData,
   };
 }
 
