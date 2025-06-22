@@ -431,7 +431,7 @@ export function ShowXAI() {
                 <div>
                   <div className="centerPadding">
                     <p className="center text-xl font-bold">
-                      Explanable Methods Evaluation (Debug Only)
+                      Explanaible Methods Evaluation (Debug Only)
                     </p>
                   </div>
                   <div className="showXAIEval">
