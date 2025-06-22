@@ -1,13 +1,13 @@
-import { BrowserRouter, Route, Routes } from "react-router-dom"
-import { RootLayout } from "./components/layout/RootLayout"
-import { Page1 } from "./pages/Page1"
-import { Page2 } from "./pages/Page2"
-import { Page3 } from "./pages/Page3"
-import { ShowXAI } from "./pages/ShowXAI"
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { RootLayout } from "./components/layout/RootLayout";
+import { Page1 } from "./pages/Page1";
+import { Page2 } from "./pages/Page2";
+import { Page3 } from "./pages/Page3";
+import { ShowXAI } from "./pages/ShowXAI";
 
 function App() {
   return (
-    <BrowserRouter>
+    <BrowserRouter basename="/thyroid-pwr">
       <Routes>
         <Route element={<RootLayout />}>
           <Route path="/" element={<Page1 />} />
@@ -17,7 +17,7 @@ function App() {
         </Route>
       </Routes>
     </BrowserRouter>
-  )
+  );
 }
 
-export default App
+export default App;
