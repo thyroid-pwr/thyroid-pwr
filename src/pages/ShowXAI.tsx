@@ -36,6 +36,7 @@ interface FormConfig {
 
 export function ShowXAI() {
   const [formConfig, setFormConfig] = useState<FormConfig>(defaultConfig);
+  const [hasSubmitted, setHasSubmitted] = useState(false);
 
   const chosenModels = ["resnet50", "densenet161", "vgg16"].filter(
     (model) => formConfig[model as keyof FormConfig]
@@ -62,7 +63,7 @@ export function ShowXAI() {
         chosenXAIs,
         formConfig.showdebug
       ),
-    enabled: isCorrectConfig,
+    enabled: isCorrectConfig && hasSubmitted,
   });
 
   // Handle form submission
@@ -82,6 +83,7 @@ export function ShowXAI() {
       gradientshap: formData.get("gradientshap") !== null,
       showdebug: formData.get("showdebug") === "yes",
     });
+    setHasSubmitted(true);
   };
 
   const curSelectedImage = formConfig.thyroidfile;
