@@ -1,5 +1,10 @@
-import { NavigationMenu, NavigationMenuItem, NavigationMenuLink, NavigationMenuList } from "@/components/ui/navigation-menu"
-import { Link, Outlet } from "react-router-dom"
+import {
+  NavigationMenu,
+  NavigationMenuItem,
+  NavigationMenuLink,
+  NavigationMenuList,
+} from "@/components/ui/navigation-menu";
+import { Link, Outlet } from "react-router-dom";
 
 export function RootLayout() {
   return (
@@ -20,7 +25,7 @@ export function RootLayout() {
               </NavigationMenuItem>
               <NavigationMenuItem>
                 <NavigationMenuLink asChild>
-                  <Link to="/page3">Page 3</Link>
+                  <Link to="/architecture">Architektura</Link>
                 </NavigationMenuLink>
               </NavigationMenuItem>
               <NavigationMenuItem>
@@ -38,5 +43,5 @@ export function RootLayout() {
         </div>
       </main>
     </div>
-  )
-} 
+  );
+}
