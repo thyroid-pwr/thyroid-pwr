@@ -1,4 +1,4 @@
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { HashRouter, Route, Routes } from "react-router-dom";
 import { RootLayout } from "./components/layout/RootLayout";
 import { Page1 } from "./pages/Page1";
 import { Page2 } from "./pages/Page2";
@@ -7,7 +7,7 @@ import { ShowXAI } from "./pages/ShowXAI";
 
 function App() {
   return (
-    <BrowserRouter basename="/thyroid-pwr">
+    <HashRouter>
       <Routes>
         <Route element={<RootLayout />}>
           <Route path="/" element={<Page1 />} />
@@ -16,7 +16,7 @@ function App() {
           <Route path="/showxai" element={<ShowXAI />} />
         </Route>
       </Routes>
-    </BrowserRouter>
+    </HashRouter>
   );
 }
 
