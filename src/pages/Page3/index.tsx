@@ -13,7 +13,7 @@ export function Page3() {
       </h1>
 
       <div className="flex flex-col gap-20">
-        <SystemArchitectureDiagram />
+        {/* <SystemArchitectureDiagram /> */}
         <DatasetsSection />
         <PreprocessingSection />
         <DinoSection />

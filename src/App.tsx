@@ -7,7 +7,7 @@ import { ShowXAI } from "./pages/ShowXAI";
 
 function App() {
   return (
-    <BrowserRouter>
+    <BrowserRouter basename="/thyroid-pwr">
       <Routes>
         <Route element={<RootLayout />}>
           <Route path="/" element={<Page1 />} />

@@ -5,6 +5,7 @@ import { defineConfig } from "vite"
 
 // https://vite.dev/config/
 export default defineConfig({
+  base: '/thyroid-pwr/',  // Add base URL matching your repository name
   plugins: [react(), tailwindcss()],
   resolve: {
     alias: {

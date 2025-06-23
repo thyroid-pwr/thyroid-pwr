@@ -8,27 +8,35 @@ export function DinoSection() {
         DINO (self-distillation with no labels)
       </h2>
       <p className="leading-7 [&:not(:first-child)]:mt-6">
-        {/* Opis DINO... */}
+        DINO to metoda samonadzorowanego uczenia reprezentacji, oparta na
+        procesie destylacji wiedzy. Wykorzystuje ona dwie identyczne sieci
+        neuronowe - nauczyciela i studenta. Sieć nauczyciela uczy się na bazie
+        globalnych widoków danych, natomiast sieć ucznia przetwarza widoki
+        lokalne. Celem studenta jest dopasowanie swojej predykcji do wyników
+        generowanych przez nauczyciela.
       </p>
 
       {/* DINO Architecture Image */}
-      <div className="flex justify-center items-center w-full">
+      <div className="flex justify-center items-center w-full px-4">
         <img
           src={dinoArchitecture}
           alt="DINO architecture"
-          className="max-w-[1200px] max-h-[1000px] w-auto h-auto object-contain"
+          className="w-full max-w-[1000px] h-auto rounded-lg"
         />
       </div>
 
-      <div className="mt-4 flex justify-center">
+      <div className="mt-6 p-4 border rounded-lg bg-muted/50">
+        <h3 className="font-semibold text-sm text-muted-foreground mb-2">
+          Źródła:
+        </h3>
         <a
           href="https://arxiv.org/abs/2104.14294"
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-flex items-center gap-2 text-primary hover:text-primary/80 transition-colors font-medium"
+          className="inline-flex items-center gap-2 text-primary hover:text-primary/80 transition-colors"
         >
           Artykuł: Emerging Properties in Self-Supervised Vision Transformers
-          <ExternalLink className="h-4 w-4" />
+          <ExternalLink className="h-4 w-4 flex-shrink-0" />
         </a>
       </div>
     </section>
