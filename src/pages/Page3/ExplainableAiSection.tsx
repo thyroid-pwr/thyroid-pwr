@@ -5,14 +5,14 @@ export function ExplainableAiSection() {
   return (
     <section className="space-y-8">
       <h2 className="scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight first:mt-0">
-        Sieci konwolucyjne i wyjaśnialność modeli
+        Convolutional neural networks and model explainability
       </h2>
       <p className="leading-7 [&:not(:first-child)]:mt-6">
-        Zamiast korzystać z metod samonadzorowanych uczenia reprezentacji,
-        możemy wytrenować konwolucyjną sieć neuronową na danych z etykietami, a
-        następnie zastosować wybraną metodę wyjaśnialności, aby wygenerować
-        wizualizację pokazującą, które obszary obrazu miały największy wpływ na
-        decyzję modelu.
+        Instead of using self-supervised learning methods,
+        we can train a convolutional neural network on labeled data, and
+        then apply a selected explainability method to generate a
+        visualization showing which areas of the image had the greatest influence on
+        the model’s decision.
       </p>
 
       {/* Explainable AI Diagram */}
@@ -26,7 +26,7 @@ export function ExplainableAiSection() {
 
       <div className="mt-6 p-4 border rounded-lg bg-muted/50">
         <h3 className="font-semibold text-sm text-muted-foreground mb-2">
-          Źródła:
+          Sources:
         </h3>
         <a
           href="https://pubmed.ncbi.nlm.nih.gov/36990051/"
@@ -34,7 +34,7 @@ export function ExplainableAiSection() {
           rel="noopener noreferrer"
           className="inline-flex items-center gap-2 text-primary hover:text-primary/80 transition-colors"
         >
-          Artykuł: Explainable AI in medical imaging: An overview for clinical
+          Article: Explainable AI in medical imaging: An overview for clinical
           practitioners - Beyond saliency-based XAI approaches
           <ExternalLink className="h-4 w-4 flex-shrink-0" />
         </a>

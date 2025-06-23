@@ -25,7 +25,7 @@ export function RootLayout() {
               </NavigationMenuItem>
               <NavigationMenuItem>
                 <NavigationMenuLink asChild>
-                  <Link to="/architecture">Architektura</Link>
+                  <Link to="/architecture">Architecture</Link>
                 </NavigationMenuLink>
               </NavigationMenuItem>
               <NavigationMenuItem>

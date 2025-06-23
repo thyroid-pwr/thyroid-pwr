@@ -22,7 +22,7 @@ export function PreprocessingSection() {
         <div className="grid md:grid-cols-[1fr_auto_1fr] gap-6">
           {/* Left side - Original */}
           <div>
-            <h3 className="text-lg font-semibold text-center mb-4">Przed</h3>
+            <h3 className="text-lg font-semibold text-center mb-4">Before</h3>
             <div className="space-y-4">
               <div className="h-[300px] flex items-center justify-center">
                 <img
@@ -72,7 +72,7 @@ export function PreprocessingSection() {
 
           {/* Right side - Processed */}
           <div>
-            <h3 className="text-lg font-semibold text-center mb-4">Po</h3>
+            <h3 className="text-lg font-semibold text-center mb-4">After</h3>
             <div className="space-y-4">
               <div className="h-[300px] flex items-center justify-center">
                 <img
