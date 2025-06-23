@@ -53,22 +53,22 @@ export function DatasetsSection() {
   return (
     <section className="space-y-8">
       <h2 className="scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight first:mt-0">
-        Zbiory danych
+        Datasets
       </h2>
       <div className="grid md:grid-cols-3 gap-4">
         <Card className="flex flex-col">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Library />
-              USG innych organów
+              USG of other organs
             </CardTitle>
             <CardDescription>
-              Zbiór do nauki ogólnych cech obrazów USG.
+              Dataset to learn overall representation of USG images.
             </CardDescription>
           </CardHeader>
           <CardContent className="flex-grow">
-            <p className="font-bold text-lg">Ponad 2,400 obrazów</p>
-            <p className="text-sm text-muted-foreground mt-2">Źródła:</p>
+            <p className="font-bold text-lg">More than 2,400 images</p>
+            <p className="text-sm text-muted-foreground mt-2">Sources:</p>
             <ul className="list-disc list-inside text-sm text-muted-foreground">
               {otherOrganDatasets.map((dataset) => (
                 <li key={dataset.name}>
@@ -90,15 +90,15 @@ export function DatasetsSection() {
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Image />
-              Pozostałe zbiory danych tarczycy
+              Thyroid USG (not annotated)
             </CardTitle>
             <CardDescription>
-              Zbiór do samonadzorowanego treningu i innych zadań.
+              Dataset for self-supervised learning and other tasks.
             </CardDescription>
           </CardHeader>
           <CardContent className="flex-grow">
-            <p className="font-bold text-lg">Ponad 16,000 obrazów</p>
-            <p className="text-sm text-muted-foreground mt-2">Źródła:</p>
+            <p className="font-bold text-lg">More than 16,000 images</p>
+            <p className="text-sm text-muted-foreground mt-2">Sources:</p>
             <ul className="list-disc list-inside text-sm text-muted-foreground">
               {otherThyroidDatasets.map((dataset) => (
                 <li key={dataset.name}>
@@ -120,15 +120,15 @@ export function DatasetsSection() {
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Tags />
-              USG tarczycy etykietowane (Złośliwość)
+              Thyroid USG (malignancy annotation)
             </CardTitle>
             <CardDescription>
-              Dane do klasyfikacji złośliwości guzków tarczycy.
+              Dataset for malignancy classification.
             </CardDescription>
           </CardHeader>
           <CardContent className="flex-grow">
-            <p className="font-bold text-lg">Ponad 23,000 obrazów</p>
-            <p className="text-sm text-muted-foreground mt-2">Źródła:</p>
+            <p className="font-bold text-lg">More than 23,000 images</p>
+            <p className="text-sm text-muted-foreground mt-2">Sources:</p>
             <ul className="list-disc list-inside text-sm text-muted-foreground">
               {thyroidDatasetsWithMalignancy.map((dataset) => (
                 <li key={dataset.name}>
