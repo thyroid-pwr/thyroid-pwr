@@ -2,7 +2,7 @@ import { ContrastiveLearningSection } from "./ContrastiveLearningSection";
 import { DatasetsSection } from "./DatasetsSection";
 import { DinoSection } from "./DinoSection";
 import { PreprocessingSection } from "./PreprocessingSection";
-import { SystemArchitectureDiagram } from "./SystemArchitectureDiagram";
+// import { SystemArchitectureDiagram } from "./SystemArchitectureDiagram";
 import { ExplainableAiSection } from "./ExplainableAiSection";
 
 export function Page3() {
