@@ -114,45 +114,52 @@ export function ShowXAI() {
 
   return (
     <div className="container mx-auto p-6">
-      <div className="text-6xl font-bold mb-8">
+      <div className="text-4xl sm:text-5xl md:text-6xl font-bold mb-8">
         <h1 className="text-center">Explainable Methods</h1>
       </div>
 
       <form id="confirmOptions" className="space-y-8" onSubmit={handleSubmit}>
         <div className="space-y-6">
-          <div className="flex flex-col items-center">
-            <h3 className="text-lg font-semibold mb-2">
-              Choose file to upload
-            </h3>
-            <div className="w-full max-w-xs relative flex justify-center">
-              <Select name="thyroidfile" defaultValue={curSelectedImage}>
-                <SelectTrigger className="text-center w-full">
-                  <SelectValue
-                    placeholder="Select an image"
-                    className="text-center"
-                  />
-                </SelectTrigger>
-                <SelectContent
-                  position="popper"
-                  align="center"
-                  avoidCollisions={false}
-                  className="w-[var(--radix-select-trigger-width)]"
-                >
-                  <SelectItem value={curSelectedImage} className="text-center">
-                    Image {curSelectedImage}
-                  </SelectItem>
-                  {notSelectedImages.map((notSelectedImage) => (
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div></div>
+            <div>
+              <h3 className="text-lg font-semibold mb-2">
+                Choose file to upload
+              </h3>
+              <div className="w-full relative">
+                <Select name="thyroidfile" defaultValue={curSelectedImage}>
+                  <SelectTrigger className="text-center w-full">
+                    <SelectValue
+                      placeholder="Select an image"
+                      className="text-center"
+                    />
+                  </SelectTrigger>
+                  <SelectContent
+                    position="popper"
+                    align="center"
+                    avoidCollisions={false}
+                    className="w-[var(--radix-select-trigger-width)]"
+                  >
                     <SelectItem
-                      key={notSelectedImage}
-                      value={notSelectedImage}
+                      value={curSelectedImage}
                       className="text-center"
                     >
-                      Image {notSelectedImage}
+                      Image {curSelectedImage}
                     </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+                    {notSelectedImages.map((notSelectedImage) => (
+                      <SelectItem
+                        key={notSelectedImage}
+                        value={notSelectedImage}
+                        className="text-center"
+                      >
+                        Image {notSelectedImage}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
             </div>
+            <div></div>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -208,7 +215,9 @@ export function ShowXAI() {
                       id={value}
                       name={value}
                       value={value}
-                      defaultChecked={formConfig[value as keyof FormConfig]}
+                      defaultChecked={
+                        formConfig[value as keyof FormConfig] as boolean
+                      }
                     />
                     <Label htmlFor={value}>{label}</Label>
                   </div>
@@ -246,14 +255,19 @@ export function ShowXAI() {
       </form>
 
       {isLoading && (
-        <Card className="mt-8">
-          <CardContent className="p-6">
-            <div className="space-y-2">
-              <Skeleton className="h-4 w-[250px]" />
-              <Skeleton className="h-4 w-[200px]" />
-            </div>
-          </CardContent>
-        </Card>
+        <div className="flex justify-center mt-8">
+          <div className="space-y-3">
+            <Skeleton className="h-4 w-[350px]" />
+            <Skeleton className="h-4 w-[280px]" />
+            <Skeleton className="h-4 w-[320px]" />
+            <Skeleton className="h-4 w-[260px]" />
+            <Skeleton className="h-4 w-[300px]" />
+            <Skeleton className="h-4 w-[240px]" />
+            <Skeleton className="h-4 w-[290px]" />
+            <Skeleton className="h-4 w-[270px]" />
+            <Skeleton className="h-4 w-[310px]" />
+          </div>
+        </div>
       )}
 
       {isError && (
