@@ -4,7 +4,6 @@ import { DinoSection } from "./DinoSection";
 import { PreprocessingSection } from "./PreprocessingSection";
 // import { SystemArchitectureDiagram } from "./SystemArchitectureDiagram";
 import { ExplainableAiSection } from "./ExplainableAiSection";
-import { SystemArchitectureDiagram } from "./SystemArchitectureDiagram";
 
 export function Page3() {
   return (
@@ -14,7 +13,6 @@ export function Page3() {
       </h1>
 
       <div className="flex flex-col gap-20">
-        {/* <SystemArchitectureDiagram /> */}
         <DatasetsSection />
         <PreprocessingSection />
         <DinoSection />
