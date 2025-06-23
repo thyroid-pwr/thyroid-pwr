@@ -3,6 +3,27 @@ import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { fetchThyroidData } from "../api/thyroidApi";
 import type { ThyroidData } from "../api/thyroidApi";
+import { Button } from "@/components/ui/button";
+import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Checkbox } from "@/components/ui/checkbox";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { Skeleton } from "@/components/ui/skeleton";
 
 // All possible images to choose from
 const imagesToChoose = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"];
@@ -92,302 +113,347 @@ export function ShowXAI() {
   );
 
   return (
-    <div>
-      <div className="text-6xl font-bold">
-        <span className="center">
-          <p>Explainable Methods</p>
-        </span>
+    <div className="container mx-auto p-6">
+      <div className="text-4xl sm:text-5xl md:text-6xl font-bold mb-8">
+        <h1 className="text-center">Explainable Methods</h1>
       </div>
 
-      <form
-        id="confirmOptions"
-        className="confirmOptions"
-        onSubmit={handleSubmit}
-      >
-        <div className="centerPadding">
-          <p className="downPadding text-xl font-bold">Choose file to upload</p>
-          <select name="thyroidfile" id="thyroidfile">
-            <option value={curSelectedImage}>Image {curSelectedImage}</option>
-            {notSelectedImages.map((notSelectedImage) => (
-              <option value={notSelectedImage} key={notSelectedImage}>
-                Image {notSelectedImage}
-              </option>
-            ))}
-          </select>
+      <form id="confirmOptions" className="space-y-8" onSubmit={handleSubmit}>
+        <div className="space-y-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div></div>
+            <div>
+              <h3 className="text-lg font-semibold mb-2">
+                Choose file to upload
+              </h3>
+              <div className="w-full relative">
+                <Select name="thyroidfile" defaultValue={curSelectedImage}>
+                  <SelectTrigger className="text-center w-full">
+                    <SelectValue
+                      placeholder="Select an image"
+                      className="text-center"
+                    />
+                  </SelectTrigger>
+                  <SelectContent
+                    position="popper"
+                    align="center"
+                    avoidCollisions={false}
+                    className="w-[var(--radix-select-trigger-width)]"
+                  >
+                    <SelectItem
+                      value={curSelectedImage}
+                      className="text-center"
+                    >
+                      Image {curSelectedImage}
+                    </SelectItem>
+                    {notSelectedImages.map((notSelectedImage) => (
+                      <SelectItem
+                        key={notSelectedImage}
+                        value={notSelectedImage}
+                        className="text-center"
+                      >
+                        Image {notSelectedImage}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+            <div></div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div>
+              <h3 className="text-lg font-semibold mb-2">
+                Select Deep Learning Models
+              </h3>
+              <div className="space-y-2">
+                <div className="flex items-center space-x-2">
+                  <Checkbox
+                    id="resnet50"
+                    name="resnet50"
+                    value="resnet50"
+                    defaultChecked={formConfig.resnet50}
+                  />
+                  <Label htmlFor="resnet50">ResNet50</Label>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <Checkbox
+                    id="densenet161"
+                    name="densenet161"
+                    value="densenet161"
+                    defaultChecked={formConfig.densenet161}
+                  />
+                  <Label htmlFor="densenet161">DenseNet161</Label>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <Checkbox
+                    id="vgg16"
+                    name="vgg16"
+                    value="vgg16"
+                    defaultChecked={formConfig.vgg16}
+                  />
+                  <Label htmlFor="vgg16">VGG16</Label>
+                </div>
+              </div>
+            </div>
+
+            <div>
+              <h3 className="text-lg font-semibold mb-2">
+                Select Explainability Methods
+              </h3>
+              <div className="space-y-2">
+                {[
+                  ["occlusion", "Occlusion"],
+                  ["gradcam", "Grad-CAM"],
+                  ["gradcamplusplus", "Grad-CAM++"],
+                  ["integratedgradients", "Integrated Gradients"],
+                  ["gradientshap", "Gradient SHAP"],
+                ].map(([value, label]) => (
+                  <div key={value} className="flex items-center space-x-2">
+                    <Checkbox
+                      id={value}
+                      name={value}
+                      value={value}
+                      defaultChecked={
+                        formConfig[value as keyof FormConfig] as boolean
+                      }
+                    />
+                    <Label htmlFor={value}>{label}</Label>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div>
+              <h3 className="text-lg font-semibold mb-2">
+                Show Evaluation Criteria
+              </h3>
+              <p className="text-sm text-muted-foreground mb-2">(Debug Only)</p>
+              <RadioGroup
+                name="showdebug"
+                defaultValue={formConfig.showdebug ? "yes" : "no"}
+              >
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="yes" id="showdebugyes" />
+                  <Label htmlFor="showdebugyes">Yes</Label>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="no" id="showdebugno" />
+                  <Label htmlFor="showdebugno">No</Label>
+                </div>
+              </RadioGroup>
+            </div>
+          </div>
         </div>
 
-        <div className="selectParameters">
-          <span>
-            <p className="center text-xl font-bold">
-              Select Deep Learning Models
-            </p>
-            <div className="text-xl">
-              <input
-                type="checkbox"
-                id="resnet50"
-                name="resnet50"
-                value="resnet50"
-                defaultChecked={formConfig.resnet50}
-              />
-              <label htmlFor="resnet50">ResNet50</label>
-              <br />
-              <input
-                type="checkbox"
-                id="densenet161"
-                name="densenet161"
-                value="densenet161"
-                defaultChecked={formConfig.densenet161}
-              />
-              <label htmlFor="densenet161">DenseNet161</label>
-              <br />
-              <input
-                type="checkbox"
-                id="vgg16"
-                name="vgg16"
-                value="vgg16"
-                defaultChecked={formConfig.vgg16}
-              />
-              <label htmlFor="vgg16">VGG16</label>
-            </div>
-          </span>
-          <span />
-          <span>
-            <p className="center text-xl font-bold">
-              Select Explainability Methods
-            </p>
-            <div className="text-xl">
-              <input
-                type="checkbox"
-                id="occlusion"
-                name="occlusion"
-                value="occlusion"
-                defaultChecked={formConfig.occlusion}
-              />
-              <label htmlFor="occlusion">Occlusion</label>
-              <br />
-              <input
-                type="checkbox"
-                id="gradcam"
-                name="gradcam"
-                value="gradcam"
-                defaultChecked={formConfig.gradcam}
-              />
-              <label htmlFor="gradcam">Grad-CAM</label>
-              <br />
-              <input
-                type="checkbox"
-                id="gradcamplusplus"
-                name="gradcamplusplus"
-                value="gradcamplusplus"
-                defaultChecked={formConfig.gradcamplusplus}
-              />
-              <label htmlFor="gradcamplusplus">Grad-CAM++</label>
-              <br />
-              <input
-                type="checkbox"
-                id="integratedgradients"
-                name="integratedgradients"
-                value="integratedgradients"
-                defaultChecked={formConfig.integratedgradients}
-              />
-              <label htmlFor="integratedgradients">Integrated Gradients</label>
-              <br />
-              <input
-                type="checkbox"
-                id="gradientshap"
-                name="gradientshap"
-                value="gradientshap"
-                defaultChecked={formConfig.gradientshap}
-              />
-              <label htmlFor="gradientshap">Gradient SHAP</label>
-            </div>
-          </span>
-          <span />
-          <span>
-            <p className="center text-xl font-bold">Show Evaluation Criteria</p>
-            <p className="center text-xl font-bold">(Debug Only)</p>
-            <div className="text-xl">
-              <input
-                type="radio"
-                id="showdebugyes"
-                name="showdebug"
-                value="yes"
-                defaultChecked={formConfig.showdebug}
-              />
-              <label htmlFor="showdebugyes">Yes</label>
-              <br />
-              <input
-                type="radio"
-                id="showdebugno"
-                name="showdebug"
-                value="no"
-                defaultChecked={!formConfig.showdebug}
-              />
-              <label htmlFor="showdebugno">No</label>
-            </div>
-          </span>
-        </div>
-
-        <div className="confirm">
-          <button type="submit">
-            <label className="center text-xl font-bold">Analyze Image</label>
-          </button>
+        <div className="flex justify-center">
+          <Button type="submit" size="lg">
+            Analyze Image
+          </Button>
         </div>
       </form>
 
       {isLoading && (
-        <div className="centerPadding">
-          <p className="text-xl font-bold">Loading...</p>
+        <div className="flex justify-center mt-8">
+          <div className="space-y-3">
+            <Skeleton className="h-4 w-[350px]" />
+            <Skeleton className="h-4 w-[280px]" />
+            <Skeleton className="h-4 w-[320px]" />
+            <Skeleton className="h-4 w-[260px]" />
+            <Skeleton className="h-4 w-[300px]" />
+            <Skeleton className="h-4 w-[240px]" />
+            <Skeleton className="h-4 w-[290px]" />
+            <Skeleton className="h-4 w-[270px]" />
+            <Skeleton className="h-4 w-[310px]" />
+          </div>
         </div>
       )}
 
       {isError && (
-        <div className="centerPadding">
-          <span className="error downPadding">
-            <p>Error loading data. Please try again.</p>
-          </span>
-        </div>
+        <Card className="mt-8 border-destructive">
+          <CardContent className="p-6">
+            <p className="text-destructive">
+              Error loading data. Please try again.
+            </p>
+          </CardContent>
+        </Card>
       )}
 
       {data && isCorrectConfig && (
-        <div>
-          <div className="showOriginalImage">
-            <span className="center">
-              <p className="text-base">Original Image</p>
+        <div className="space-y-8 mt-8">
+          <div className="flex flex-col sm:flex-row gap-8 justify-center">
+            <div className="text-center flex flex-col items-center">
+              <div className="h-12 flex items-center justify-center mb-2">
+                <p>Original Image</p>
+              </div>
               <img
                 src={`showxai/${data.thyroidFile}/image.jpg`}
                 width="180"
                 height="180"
                 alt="Original thyroid image"
+                className="rounded-lg"
               />
-            </span>
+            </div>
             {data.showDebug && (
-              <span className="center">
-                <p className="text-base">Annotated Image (Debug Only)</p>
+              <div className="text-center flex flex-col items-center">
+                <div className="h-12 flex items-center justify-center mb-2">
+                  <p>Annotated Image (Debug Only)</p>
+                </div>
                 <img
                   src={`showxai/${data.thyroidFile}/annotated_image.jpg`}
                   width="180"
                   height="180"
                   alt="Annotated thyroid image"
+                  className="rounded-lg"
                 />
-              </span>
+              </div>
             )}
           </div>
 
-          {/* Display XAI methods saliency maps */}
-          <div className="centerPadding">
-            <p className="center text-xl font-bold">Generated Explanations</p>
-          </div>
-
-          {/* Display XAI Methods */}
-          {data.modelsData.map((singleModelData) => (
-            <div className="showXAIMethods" key={singleModelData.modelFullName}>
-              <span className="center">
-                <p className="text-base">{singleModelData.modelFullName}</p>
-                <p className="text-base">
-                  Predicted Class: {singleModelData.predictedClass}
-                </p>
-                <p className="text-base">
-                  Confidence: {singleModelData.confidence}
-                </p>
-                {data.showDebug && (
-                  <p className="text-base">
-                    True Class (Debug Only): {singleModelData.correctClass}
-                  </p>
-                )}
-              </span>
-              {singleModelData.saliencyMaps.map((saliencyMap) => (
-                <span className="center" key={saliencyMap.xaiFullName}>
-                  <p className="text-base">{saliencyMap.xaiFullName}</p>
-                  <img
-                    src={saliencyMap.filepath}
-                    width="180"
-                    height="180"
-                    alt={`${saliencyMap.xaiFullName} saliency map`}
-                  />
-                </span>
-              ))}
-            </div>
-          ))}
-
-          {/* Display debug table */}
-          {data.showDebug && (
-            <div>
-              <div className="centerPadding">
-                <p className="center text-xl font-bold">
-                  Explainable Methods Evaluation (Debug Only)
-                </p>
-              </div>
-              <div className="showXAIEval">
-                <table>
-                  <thead>
-                    <tr>
-                      <th>Model</th>
-                      <th>Explainable Method</th>
-                      <th>
-                        Correctness <br /> Relevant Pixels <br /> Confidence
-                        Change{" "}
-                      </th>
-                      <th>
-                        Correctness <br /> Irrelevant Pixels <br /> Confidence
-                        Change{" "}
-                      </th>
-                      <th>
-                        Contrastivity <br /> Predicted Class{" "}
-                      </th>
-                      <th>
-                        Contrastivity <br /> Confidence{" "}
-                      </th>
-                      <th>
-                        Coherence <br /> % of Relevant Pixels In Nodule{" "}
-                      </th>
-                      <th>
-                        Computational Efficiency <br /> Execution Time <br />{" "}
-                        (in seconds){" "}
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {data.xaiEval.map((dataRow) => (
-                      <tr
-                        key={`${dataRow.modelFullName}-${dataRow.xaiFullName}`}
-                        className={dataRow.modelFullName + dataRow.xaiFullName}
+          <Card>
+            <CardHeader>
+              <CardTitle>Generated Explanations</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-8">
+              {data.modelsData.map((singleModelData) => (
+                <div
+                  key={singleModelData.modelFullName}
+                  className="flex flex-col md:flex-row gap-8"
+                >
+                  <div className="md:min-w-48 flex-shrink-0 flex flex-col items-center md:items-start md:justify-center">
+                    <h3 className="text-lg font-semibold mb-2 text-center md:text-left">
+                      {singleModelData.modelFullName}
+                    </h3>
+                    <div className="space-y-1 text-sm text-muted-foreground text-center md:text-left">
+                      <p>Predicted Class: {singleModelData.predictedClass}</p>
+                      <p>Confidence: {singleModelData.confidence}</p>
+                      {data.showDebug && (
+                        <p>
+                          True Class (Debug Only):{" "}
+                          {singleModelData.correctClass}
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 flex-grow">
+                    {singleModelData.saliencyMaps.map((saliencyMap) => (
+                      <div
+                        key={saliencyMap.xaiFullName}
+                        className="text-center flex flex-col items-center"
                       >
-                        <td>{dataRow.modelFullName}</td>
-                        <td>{dataRow.xaiFullName}</td>
-                        <td>{dataRow.cor_rel_pixels}</td>
-                        <td>{dataRow.cor_ir_pixels}</td>
-                        <td>{dataRow.con_class}</td>
-                        <td>{dataRow.con_conf}</td>
-                        <td>{dataRow.coh}</td>
-                        <td>{dataRow.com_time}</td>
-                      </tr>
+                        <div className="h-12 flex items-center justify-center mb-2">
+                          <p className="text-sm font-medium leading-tight">
+                            {saliencyMap.xaiFullName}
+                          </p>
+                        </div>
+                        <img
+                          src={saliencyMap.filepath}
+                          width="180"
+                          height="180"
+                          alt={`${saliencyMap.xaiFullName} saliency map`}
+                          className="rounded-lg"
+                        />
+                      </div>
                     ))}
-                  </tbody>
-                </table>
-              </div>
-            </div>
+                  </div>
+                </div>
+              ))}
+            </CardContent>
+          </Card>
+
+          {data.showDebug && (
+            <Card>
+              <CardHeader>
+                <CardTitle>
+                  Explainable Methods Evaluation (Debug Only)
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead className="font-bold">Model</TableHead>
+                      <TableHead className="font-bold">
+                        Explainable Method
+                      </TableHead>
+                      <TableHead className="font-bold">
+                        Correctness
+                        <br />
+                        Relevant Pixels
+                        <br />
+                        Confidence Change
+                      </TableHead>
+                      <TableHead className="font-bold">
+                        Correctness
+                        <br />
+                        Irrelevant Pixels
+                        <br />
+                        Confidence Change
+                      </TableHead>
+                      <TableHead className="font-bold">
+                        Contrastivity
+                        <br />
+                        Predicted Class
+                      </TableHead>
+                      <TableHead className="font-bold">
+                        Contrastivity
+                        <br />
+                        Confidence
+                      </TableHead>
+                      <TableHead className="font-bold">
+                        Coherence
+                        <br />% of Relevant Pixels In Nodule
+                      </TableHead>
+                      <TableHead className="font-bold">
+                        Computational Efficiency
+                        <br />
+                        Execution Time
+                        <br />
+                        (in seconds)
+                      </TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {data.xaiEval.map((dataRow) => (
+                      <TableRow
+                        key={`${dataRow.modelFullName}-${dataRow.xaiFullName}`}
+                        className="even:bg-muted hover:bg-muted/80"
+                      >
+                        <TableCell>{dataRow.modelFullName}</TableCell>
+                        <TableCell>{dataRow.xaiFullName}</TableCell>
+                        <TableCell>{dataRow.cor_rel_pixels}</TableCell>
+                        <TableCell>{dataRow.cor_ir_pixels}</TableCell>
+                        <TableCell>{dataRow.con_class}</TableCell>
+                        <TableCell>{dataRow.con_conf}</TableCell>
+                        <TableCell>{dataRow.coh}</TableCell>
+                        <TableCell>{dataRow.com_time}</TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </CardContent>
+            </Card>
           )}
         </div>
       )}
 
-      {/* Display error message if incorrect config */}
       {!isCorrectConfig && (
-        <div className="centerPadding">
-          <span className="error downPadding">
-            <p>ERROR</p>
-          </span>
-          {!isOneModelChosen && (
-            <span className="error downPadding">
-              <p>You need to choose at least one model</p>
-            </span>
-          )}
-          {!isOneXAIChosen && (
-            <span className="error downPadding">
-              <p>You need to choose at least one explainability method</p>
-            </span>
-          )}
-        </div>
+        <Card className="mt-8 border-destructive">
+          <CardContent className="p-6 space-y-4">
+            <p className="text-destructive font-bold">ERROR</p>
+            {!isOneModelChosen && (
+              <p className="text-destructive">
+                You need to choose at least one model
+              </p>
+            )}
+            {!isOneXAIChosen && (
+              <p className="text-destructive">
+                You need to choose at least one explainability method
+              </p>
+            )}
+          </CardContent>
+        </Card>
       )}
     </div>
   );
