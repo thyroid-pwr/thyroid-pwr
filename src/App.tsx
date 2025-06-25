@@ -11,8 +11,8 @@ function App() {
       <Routes>
         <Route element={<RootLayout />}>
           <Route path="/" element={<Page1 />} />
+          <Route path="/page2" element={<Page2 />} />
           <Route path="/architecture" element={<Page3 />} />
-          <Route path="/results" element={<Page2 />} />
           <Route path="/showxai" element={<ShowXAI />} />
         </Route>
       </Routes>
