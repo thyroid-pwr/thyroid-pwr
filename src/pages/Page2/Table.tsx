@@ -3,6 +3,13 @@ import dino_model from "@/assets/dino1.png";
 import dino_att1 from "@/assets/dino1_att1.png";
 import dino_att2 from "@/assets/dino1_att2.png";
 import dino_att3 from "@/assets/dino1_att3.png";
+
+import dino2_model from "@/assets/dino2.png";
+import dino2_att1 from "@/assets/dino2_att1.png";
+import dino2_att2 from "@/assets/dino2_att2.png";
+import dino2_att3 from "@/assets/dino2_att3.png";
+
+
 import {
   Table as UITable,
   TableBody,
@@ -53,9 +60,9 @@ const contents: Content[] = [
   {
     label: "DINOv2 Attention Map",
     images: [
-      [dino_model, dino_att1],
-      [dino_model, dino_att2],
-      [dino_model, dino_att3],
+      [dino2_model, dino2_att1],
+      [dino2_model, dino2_att2],
+      [dino2_model, dino2_att3],
     ],
     text: "Here, attention maps from the most promising heads of the DINOv2 model are presented.",
   },
