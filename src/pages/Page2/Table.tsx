@@ -72,7 +72,6 @@ export function Table() {
   const [activeIndex, setActiveIndex] = useState(0);
   const [imageIndex, setImageIndex] = useState(0);
   const { images, text, tableData } = contents[activeIndex];
-  // const widths = ["w-full", "w-full", "w-full"]; // use full width on mobile by default
   const sidebarRef = useRef<HTMLDivElement>(null);
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
@@ -92,15 +91,15 @@ export function Table() {
       <h2 className="scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight first:mt-0">
         Results
       </h2>
-      <div className="flex flex-col sm:flex-row p-6 bg-gray-100 min-h-[600px] items-start sm:items-center justify-center">
+      <div className="flex flex-col sm:flex-row p-4 sm:p-6 bg-gray-100 min-h-[600px] items-start sm:items-center justify-center space-y-6 sm:space-y-0 sm:space-x-6">
         {/* Sidebar */}
         <div
           ref={sidebarRef}
           tabIndex={0}
           onKeyDown={handleKeyDown}
-          className="flex sm:flex-col gap-4 mb-6 sm:mb-0 sm:mr-6 outline-none w-full sm:w-auto"
+          className="w-full sm:w-auto outline-none"
         >
-          <div className="sm:w-[200px] bg-white rounded-lg p-4 shadow">
+          <div className="bg-white rounded-lg p-4 shadow w-full sm:w-[200px]">
             <h2 className="text-lg font-bold text-gray-800 mb-2">
               thyroID Project Overview
             </h2>
@@ -112,7 +111,7 @@ export function Table() {
                     setActiveIndex(index);
                     setImageIndex(0);
                   }}
-                  className={`px-4 py-3 min-w-[120px] sm:min-w-full rounded-md text-sm font-medium transition-all duration-200 whitespace-nowrap ${
+                  className={`px-4 py-2 min-w-[120px] sm:min-w-full rounded-md text-sm font-medium transition-all duration-200 whitespace-nowrap ${
                     index === activeIndex
                       ? "bg-blue-600 text-white"
                       : "bg-white border border-gray-300 text-gray-800 hover:bg-gray-100"
@@ -127,10 +126,7 @@ export function Table() {
         </div>
 
         {/* Main Content */}
-        <div
-          className={`flex flex-col gap-6 items-center bg-white rounded-xl p-6 sm:p-8 shadow-lg transition-all duration-300 w-full max-w-full sm:max-w-[1200px]`}
-        >
-          {/* Content Display */}
+        <div className="flex flex-col gap-6 items-center bg-white rounded-xl p-4 sm:p-8 shadow-lg w-full sm:max-w-[1200px] transition-all duration-300">
           {tableData ? (
             <div className="w-full overflow-x-auto">
               <UITable>
@@ -177,25 +173,17 @@ export function Table() {
               </div>
 
               {/* Image Pair Display */}
-              <div className="flex flex-col sm:flex-row gap-6 sm:gap-8 items-center w-full justify-center">
+              <div className="flex flex-col sm:flex-row gap-4 sm:gap-8 items-center justify-center w-full">
                 {images?.[imageIndex].map((src, i) => (
-                  <div key={i} className="flex flex-col items-center max-w-[320px] sm:max-w-[300px]">
+                  <div key={i} className="flex flex-col items-center w-full max-w-[90%] sm:max-w-[300px]">
                     <img
                       src={src}
                       alt={`Image ${i}`}
-                      className="w-full max-w-[300px] h-[350px] object-cover rounded-lg border"
+                      className="w-full h-[250px] sm:h-[350px] object-cover rounded-lg border"
                       loading="lazy"
                     />
-                    <p className="mt-2 text-lg text-gray-600 font-medium select-none">
-                      {i === 0
-                        ? "Input"
-                        : `Head ${
-                            (() => {
-                              const filename = src.split("/").pop() || "";
-                              const match = filename.match(/(\d+)(?=\.png$)/);
-                              return match ? match[1] : "N/A";
-                            })()
-                          }`}
+                    <p className="mt-2 text-sm sm:text-base text-gray-600 font-medium select-none">
+                      {i === 0 ? "Input" : `Head ${imageIndex + i}`}
                     </p>
                   </div>
                 ))}
@@ -204,7 +192,7 @@ export function Table() {
           )}
 
           {/* Description */}
-          <div className="text-center text-lg sm:text-xl font-semibold text-gray-800 max-w-md mt-4 px-2 sm:px-0">
+          <div className="text-center text-base sm:text-lg font-semibold text-gray-800 max-w-md mt-4 px-2 sm:px-0">
             {text}
           </div>
         </div>
