@@ -95,7 +95,7 @@ export function Table() {
         >
           <div className="sm:w-[200px] bg-white rounded-lg p-4 shadow">
             <h2 className="text-lg font-bold text-gray-800 mb-2">
-              thryoID Project Overview
+              thyroID Project Overview
             </h2>
             <div className="flex sm:flex-col gap-2 overflow-x-auto sm:overflow-visible">
               {contents.map((content, index) => (
