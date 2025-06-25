@@ -6,7 +6,7 @@ export function Summary() {
         Summary
       </h2>
       <p className="leading-7 [&:not(:first-child)]:mt-6">
-      Current solutions and methods have revealed remarkable possibilities for further investigation into this problem, enabling future research and the potential for accurate classification of malignant thyroid nodules.
+      Current solutions and methods have revealed possibilities for further investigation into this problem, enabling future research and the potential for accurate malignancy classification.
         </p>
 
 

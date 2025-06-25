@@ -8,7 +8,7 @@ export function DinoSection() {
       DINO Embedding Space
       </h2>
       <p className="leading-7 [&:not(:first-child)]:mt-6">
-      As the results obtained from the attention heads were surprisingly good, we decided to use the DINOv2 embeddings for the classification task of identifying malignant thyroid tumors. Below, a UMAP visualization of the DINOv2 embeddings on the test set is presented, with class labels included.
+      As the results obtained from the attention heads were promising, we decided to use the DINOv2 embeddings to identify malignant thyroid tumors. Below, a UMAP visualization of the DINOv2 embeddings on the dataset is presented, with class labels included.
         </p>
 
       {/* DINO Architecture Image */}
