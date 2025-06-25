@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import {useRef, useState } from "react";
 import dino_model from "@/assets/dino1.png";
 import dino_att1 from "@/assets/dino1_att1.png";
 import dino_att2 from "@/assets/dino1_att2.png";
@@ -65,7 +65,7 @@ export function Table() {
   const [activeIndex, setActiveIndex] = useState(0);
   const [imageIndex, setImageIndex] = useState(0);
   const { images, text, tableData } = contents[activeIndex];
-  const widths = ["w-full", "w-full", "w-full"]; // use full width on mobile by default
+  // const widths = ["w-full", "w-full", "w-full"]; // use full width on mobile by default
   const sidebarRef = useRef<HTMLDivElement>(null);
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
