@@ -25,7 +25,7 @@ export function RootLayout() {
               </NavigationMenuItem>
               <NavigationMenuItem>
                 <NavigationMenuLink asChild>
-                  <Link to="/page2">Page 3</Link>
+                  <Link to="/results">Results</Link>
                 </NavigationMenuLink>
               </NavigationMenuItem>
               <NavigationMenuItem>
