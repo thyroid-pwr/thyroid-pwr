@@ -1,4 +1,4 @@
-import {useRef, useState } from "react";
+import { useRef, useState } from "react";
 import dino_model from "@/assets/dino1.png";
 import dino_att1 from "@/assets/dino1_att1.png";
 import dino_att2 from "@/assets/dino1_att2.png";
@@ -39,7 +39,7 @@ const contents: Content[] = [
       { id: 5, name: "DenseNet161", acc: "0.71", prec: "0.70", recall: "0.71", f1: "0.70" },
       { id: 6, name: "VGG16",        acc: "0.67", prec: "0.65", recall: "0.65", f1: "0.65" },
     ],
-    text: "Evaluation metrics for the segmentation task.",
+    text: "Evaluation metrics for the classification task.",
   },
   {
     label: "DINO Attention Map",
@@ -95,7 +95,7 @@ export function Table() {
         >
           <div className="sm:w-[200px] bg-white rounded-lg p-4 shadow">
             <h2 className="text-lg font-bold text-gray-800 mb-2">
-              ThryoID Project Overview
+              thryoID Project Overview
             </h2>
             <div className="flex sm:flex-col gap-2 overflow-x-auto sm:overflow-visible">
               {contents.map((content, index) => (
