@@ -40,7 +40,7 @@ export function Page1() {
                 <strong>Diagnostic uncertainty:</strong> In over 20% of cases, results are inconclusive.
               </li>
               <li>
-                <strong>Unnecessary surgeries:</strong> 60% of thyroid removal surgeries are unnecessary.
+                <strong>Unnecessary surgeries:</strong> In case of inconclusive diagnosis, 60% of thyroid removal surgeries are unnecessary.
               </li>
             </ul>
           </CardContent>
@@ -56,10 +56,10 @@ export function Page1() {
           <CardContent>
             <ul className="list-disc ml-5 space-y-2 text-base">
               <li>
-                <strong>Main goal:</strong> Identify differences between benign and malignant thyroid nodules using ultrasound.
+                <strong>Main goal:</strong> Identify differences between benign and malignant thyroid nodules using ultrasound images.
               </li>
               <li>
-                <strong>Additional goal:</strong> Build a system to improve diagnostic accuracy.
+                <strong>Additional goal:</strong> Build a system to improve diagnostic accuracy for thyroid cancer detection.
               </li>
             </ul>
           </CardContent>
@@ -76,8 +76,8 @@ export function Page1() {
             <ul className="list-disc ml-5 space-y-2 text-base">
               <li>Collected and preprocessed ultrasound dataset</li>
               <li>Implemented thyroid segmentation module</li>
-              <li>Tested malignancy classification models</li>
-              <li>Explored attention-based explainability</li>
+              <li>Tested various classification models</li>
+              <li>Explored various explainability methods</li>
             </ul>
           </CardContent>
         </Card>
@@ -96,13 +96,13 @@ export function Page1() {
       {/* TEAM INFO */}
       <div className="flex flex-col items-center justify-center border-t pt-6 text-base text-center">
         <h3 className="text-xl font-semibold mb-2 text-blue-800">Project Team</h3>
-        <p>Piotr Durniat, Tomasz Hałas , Jakub Kukowski, Wiktor Sadowy </p>
+        <p>Piotr Durniat, Tomasz Hałas, Jakub Kukowski, Wiktor Sadowy </p>
 
         <h3 className="text-xl font-semibold mt-4 mb-2 text-blue-800">Scientific Supervisor</h3>
-        <p>Prof. dr hab. inż. Halina Kwaśnicka</p>
+        <p>Prof. Halina Kwaśnicka, DSc, PhD, Eng</p>
 
         <h3 className="text-xl font-semibold mt-4 mb-2 text-blue-800">Didactic Support</h3>
-        <p>dr n. med. Tomasz Tomkalski</p>
+        <p>Assistant Prof. Tomasz Tomkalski, PhD</p>
       </div>
     </div>
   );
